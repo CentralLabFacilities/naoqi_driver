@@ -20,6 +20,12 @@
 #define ROS_ENV_HPP
 
 /*
+* STD includes
+*
+*/
+#include <string>
+
+/*
 * ROS includes
 */
 #include <ros/ros.h>
@@ -45,8 +51,16 @@ namespace ros_env
  */
 static std::string getROSIP(std::string network_interface)
 {
+
+  static const std::string ip;
+
   if (network_interface.empty())
     network_interface = "eth0";
+
+  if (network_interface.compare("localhost") == 0) {
+    ip = "127.0.0.1";
+    return ip;
+  }
 
   typedef std::map< std::string, std::vector<std::string> > Map_IP;
   Map_IP map_ip = static_cast<Map_IP>(qi::os::hostIPAddrs());
@@ -57,7 +71,7 @@ static std::string getROSIP(std::string network_interface)
     exit(1);
   }
 
-  static const std::string ip = map_ip[network_interface][0];
+  ip = map_ip[network_interface][0];
   return ip;
 }
 
