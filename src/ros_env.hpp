@@ -52,7 +52,7 @@ namespace ros_env
 static std::string getROSIP(std::string network_interface)
 {
 
-  static const std::string ip;
+  static std::string ip;
 
   if (network_interface.empty())
     network_interface = "eth0";
