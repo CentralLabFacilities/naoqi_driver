@@ -84,13 +84,13 @@ void OdomConverter::callAll( const std::vector<message_actions::MessageAction>& 
   msg_odom.pose.pose.position.y = odomY;
   msg_odom.pose.pose.position.z = odomZ;
   
-  msg_odom.twist.twist.linear.x = dX;
-  msg_odom.twist.twist.linear.y = dY;
-  msg_odom.twist.twist.linear.z = 0;
+  //msg_odom.twist.twist.linear.x = dX;
+  //msg_odom.twist.twist.linear.y = dY;
+  //msg_odom.twist.twist.linear.z = 0;
   
-  msg_odom.twist.twist.angular.x = 0;
-  msg_odom.twist.twist.angular.y = 0;
-  msg_odom.twist.twist.angular.z = dWZ;
+  //msg_odom.twist.twist.angular.x = 0;
+  //msg_odom.twist.twist.angular.y = 0;
+  //msg_odom.twist.twist.angular.z = dWZ;
 
   for_each( message_actions::MessageAction action, actions )
   {
