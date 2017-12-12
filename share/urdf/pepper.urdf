@@ -60,9 +60,9 @@
     </collision>
   </link>
   <joint name="HipRoll" type="revolute">
-    <parent link="torso"/>
-    <child link="Hip"/>
-    <origin rpy="0 0 0" xyz="2e-05 0 -0.139"/>
+    <origin rpy="0 0 0" xyz="0 0 0.079"/>
+    <child link="torso_base"/>
+    <parent link="Hip"/>
     <axis xyz="1.0 0 0"/>
     <limit effort="10.1884" lower="-0.514872" upper="0.514872" velocity="2.27032"/>
   </joint>
@@ -70,25 +70,25 @@
     <inertial>
       <mass value="1.02338"/>
       <inertia ixx="0.00502422" ixy="0" ixz="-2.54911e-05" iyy="0.00640971" iyz="0.000159449" izz="0.00441082"/>
-      <origin rpy="0 0 0" xyz="0.00032 0 -0.06039"/>
+      <origin rpy="0 0 0" xyz="0.00032 0 -0.07068"/>
     </inertial>
     <visual>
       <geometry>
         <mesh filename="package://pepper_meshes/meshes/1.0/HipRoll.dae" scale="0.1 0.1 0.1"/>
       </geometry>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="0 0 0" xyz="0 0 0.079"/>
     </visual>
     <collision>
       <geometry>
         <mesh filename="package://pepper_meshes/meshes/1.0/HipRoll_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="0 0 0" xyz="0 0 0.079"/>
     </collision>
   </link>
   <joint name="HipPitch" type="revolute">
-    <parent link="Hip"/>
-    <child link="Pelvis"/>
-    <origin rpy="0 0 0" xyz="0 0 -0.079"/>
+    <origin rpy="0 0 0" xyz="0 0 0.268"/>
+    <child link="Hip"/>
+    <parent link="Pelvis"/>
     <axis xyz="0 1.0 0"/>
     <limit effort="19.787" lower="-1.03847" upper="1.03847" velocity="2.93276"/>
   </joint>
@@ -96,25 +96,25 @@
     <inertial>
       <mass value="2.45917"/>
       <inertia ixx="0.034351" ixy="0" ixz="0.000223034" iyy="0.0303122" iyz="-8.37542e-05" izz="0.0143771"/>
-      <origin rpy="0 0 0" xyz="0.00237 0 -0.09654"/>
+      <origin rpy="0 0 0" xyz="0.00237 0 -0.01754"/>
     </inertial>
     <visual>
       <geometry>
         <mesh filename="package://pepper_meshes/meshes/1.0/HipPitch.dae" scale="0.1 0.1 0.1"/>
       </geometry>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="0 0 0" xyz="0 0 0.268"/>
     </visual>
     <collision>
       <geometry>
         <mesh filename="package://pepper_meshes/meshes/1.0/HipPitch_0.10.stl" scale="0.1 0.1 0.1"/>
       </geometry>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="0 0 0" xyz="0 0 0.268"/>
     </collision>
   </link>
   <joint name="KneePitch" type="revolute">
-    <parent link="Pelvis"/>
-    <child link="Tibia"/>
-    <origin rpy="0 0 0" xyz="0 0 -0.268"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <child link="Pelvis"/>
+    <parent link="Tibia"/>
     <axis xyz="0 1.0 0"/>
     <limit effort="27.702" lower="-0.514872" upper="0.514872" velocity="2.93276"/>
   </joint>
@@ -122,7 +122,7 @@
     <inertial>
       <mass value="11.6015"/>
       <inertia ixx="0.129229" ixy="-0.000401943" ixz="0.00048556" iyy="0.122839" iyz="-1.01666e-08" izz="0.108168"/>
-      <origin rpy="0 0 0" xyz="0.00220451 0 -0.185729"/>
+      <origin rpy="0 0 0" xyz="0.00220451 0 0.082271"/>
     </inertial>
     <visual>
       <geometry>
@@ -138,16 +138,16 @@
     </collision>
   </link>
   <joint name="base_footprint_joint" type="fixed">
-    <parent link="Tibia"/>
-    <child link="base_footprint"/>
-    <origin rpy="0 0 0" xyz="0 0 -0.334"/>
+    <origin rpy="0 0 0" xyz="0 0 0.334"/>
+    <child link="Tibia"/>
+    <parent link="base_footprint"/>
   </joint>
   <link name="base_footprint"/>
-  <link name="base_link"/>
-  <joint name="base_link_fixedjoint" type="fixed">
-    <parent link="base_link"/>
+  <link name="torso_base"/>
+  <joint name="torso_base_fixedjoint" type="fixed">
+    <parent link="torso_base"/>
     <child link="torso"/>
-    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <origin rpy="0 0 0" xyz="-2e-05 0 0.139"/>
     <axis xyz="0 0 0"/>
   </joint>
   <link name="torso">
@@ -455,6 +455,32 @@
       <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
     </inertial>
   </link>
+  <joint name="RGrasp" type="fixed">
+    <parent link="r_wrist"/>
+    <child link="r_grasp_frame"/>
+    <origin rpy="-3.1415 0 1.5707" xyz="0.05 0 0"/>
+    <axis xyz="1.0 0 0"/>
+    <limit effort="0.144" lower="0.02" upper="0.98" velocity="12.56"/>
+  </joint>
+  <link name="r_grasp_frame">
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+    </inertial>
+  </link>
+  <joint name="LGrasp" type="fixed">
+    <parent link="l_wrist"/>
+    <child link="l_grasp_frame"/>
+    <origin rpy="-3.1415 0 1.5707" xyz="0.05 0 0"/>
+    <axis xyz="1.0 0 0"/>
+    <limit effort="0.144" lower="0.02" upper="0.98" velocity="12.56"/>
+  </joint>
+  <link name="l_grasp_frame">
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+    </inertial>
+  </link>
   <link name="SonarBack_frame"/>
   <joint name="Sonar/Back_sensor_fixedjoint" type="fixed">
     <parent link="Tibia"/>
@@ -675,6 +701,12 @@
     <child link="HeadTouchMiddle_frame"/>
     <origin rpy="0 -0.0349066 0" xyz="0.0041 0 0.2159"/>
     <axis xyz="0 0 0"/>
+  </joint>
+  <link name="Lgrasp_frame"/>
+  <joint name="Lgrasp_frame_joint" type="fixed">
+    <parent link="l_wrist"/>
+    <child link="Lgrasp_frame"/>
+    <origin rpy="3.1415 0 1.5707" xyz="0.070 0 0"/>
   </joint>
   <link name="RFinger41_link">
     <inertial>
@@ -1454,10 +1486,6 @@
     <axis xyz="1.0 0 0"/>
     <limit effort="3.25" lower="0" upper="0" velocity="6.28319"/>
   </joint>
-  <!-- MACROS FOR DISABLE LINKS -->
-  <!-- MACROS FOR MIMIC JOINTS -->
-  <!-- Fingers -->
-  <!-- Thumbs -->
   <!-- GAZEBO ROS CONTROL -->
   <gazebo>
     <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
@@ -2351,8 +2379,6 @@
       <mechanicalReduction>118.1</mechanicalReduction>
     </actuator>
   </transmission>
-  <!-- ARMS -->
-  <!-- XACRO -->
   <transmission name="LShoulderPitch_Transmission">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="LShoulderPitch">
@@ -2507,7 +2533,6 @@
       <mechanicalReduction>108.33</mechanicalReduction>
     </actuator>
   </transmission>
-  <!-- XACRO -->
   <transmission name="WheelFL_Transmission">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="WheelFL">
@@ -2542,3 +2567,4 @@
     </actuator>
   </transmission>
 </robot>
+
