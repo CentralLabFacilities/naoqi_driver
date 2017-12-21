@@ -76,7 +76,7 @@ void OdomConverter::callAll( const std::vector<message_actions::MessageAction>& 
 
   static nav_msgs::Odometry msg_odom;
   msg_odom.header.frame_id = "odom";
-  msg_odom.child_frame_id = "base_link";
+  msg_odom.child_frame_id = "base_footprint";
   msg_odom.header.stamp = odom_stamp;
 
   msg_odom.pose.pose.orientation = odom_quat;
