@@ -51,7 +51,7 @@ inline void addBaseFootprint( boost::shared_ptr<tf2_ros::Buffer> tf2_buffer, std
     // TRANSFORM THEM DIRECTLY INTO TRANSFORM
     tf_odom_to_left_foot  = tf2_buffer->lookupTransform("odom", "l_sole",    time );
     tf_odom_to_right_foot = tf2_buffer->lookupTransform("odom", "r_sole",    time );
-    tf_odom_to_base       = tf2_buffer->lookupTransform("odom", "base_link", time );
+    tf_odom_to_base       = tf2_buffer->lookupTransform("odom", "base_footprint", time );
   } catch (const tf::TransformException& ex){
     ROS_ERROR("NAO Footprint error %s",ex.what());
     return ;
@@ -89,7 +89,7 @@ inline void addBaseFootprint( boost::shared_ptr<tf2_ros::Buffer> tf2_buffer, std
   geometry_msgs::TransformStamped message;
   //message.transform = tf2::toMsg(tf_base_to_footprint);
   message.header.stamp = time;
-  message.header.frame_id = "base_link";
+  message.header.frame_id = "torso_base";
   message.child_frame_id = "base_footprint";
 
   message.transform.rotation.x = tf_base_to_footprint.getRotation().x();
