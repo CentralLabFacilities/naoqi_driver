@@ -43,7 +43,7 @@ namespace converter {
     p_memory_(session->service("ALMemory"))
   {
     if(location == IMU::TORSO){
-      msg_imu_.header.frame_id = "base_link";
+      msg_imu_.header.frame_id = "torso_base";
       data_names_list_.push_back("DCM/Time");
       data_names_list_.push_back("Device/SubDeviceList/InertialSensor/AngleX/Sensor/Value");
       data_names_list_.push_back("Device/SubDeviceList/InertialSensor/AngleY/Sensor/Value");
