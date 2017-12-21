@@ -89,7 +89,7 @@ inline void addBaseFootprint( boost::shared_ptr<tf2_ros::Buffer> tf2_buffer, std
   geometry_msgs::TransformStamped message;
   //message.transform = tf2::toMsg(tf_base_to_footprint);
   message.header.stamp = time;
-  message.header.frame_id = "torso_base";
+  message.header.frame_id = "base_link";
   message.child_frame_id = "base_footprint";
 
   message.transform.rotation.x = tf_base_to_footprint.getRotation().x();
