@@ -5,3 +5,5 @@ doc/*
 !doc/Doxyfile
 *.pro
 *.pro.user
+*.idea/*
+*.idea

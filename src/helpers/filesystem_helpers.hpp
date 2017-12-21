@@ -112,7 +112,10 @@ inline std::string& getBootConfigFile()
 inline std::string& getURDF( std::string filename )
 {
 #ifdef CATKIN_BUILD
-  static std::string path = ros::package::getPath("naoqi_driver")+"/share/urdf/"+filename;
+  // TODO: define ros.param for the URDF
+  // I know, this is a hack, but I am too lazy to work through this and define a ros.param
+  // pepper_clf_description)/urdf/pepper$(arg version)_generated_urdf/
+  static std::string path = ros::package::getPath("pepper_clf_description")+"/urdf/pepper1.0_generated_urdf/"+filename;
   std::cout << "found a catkin URDF " << path << std::endl;
   return path;
 #else
