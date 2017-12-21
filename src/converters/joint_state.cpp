@@ -137,11 +137,14 @@ void JointStateConverter::callAll( const std::vector<message_actions::MessageAct
    * but this would require a proper URDF 
    * with a base_link and base_footprint in the base
    */
-  std::vector<float> al_odometry_data = p_motion_.call<std::vector<float> >( "getPosition", "Torso", 1, true );
+  std::vector<float> al_odometry_data = p_motion_.call<std::vector<float> >( "getPosition", "KneePitch", 1, true );
   const ros::Time& odom_stamp = ros::Time::now();
   const float& odomX  =  al_odometry_data[0];
   const float& odomY  =  al_odometry_data[1];
-  const float& odomZ  =  al_odometry_data[2];
+  //const float& odomZ  =  al_odometry_data[2];
+  // Unfortunately,  the lowest joint we can get the
+  // position from is KneePitch, thus, we set Z to Zero here
+  const float& odomZ  =  0.0;
   const float& odomWX =  al_odometry_data[3];
   const float& odomWY =  al_odometry_data[4];
   const float& odomWZ =  al_odometry_data[5];
