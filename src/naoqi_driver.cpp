@@ -112,7 +112,7 @@
 namespace naoqi
 {
 
-Driver::Driver( qi::SessionPtr session, const std::string& prefix )
+Driver::Driver( qi::SessionPtr session, const std::string& prefix, const std::string& config_file )
   : sessionPtr_( session ),
   robot_( helpers::driver::getRobot(session) ),
   freq_(15),
@@ -129,6 +129,12 @@ Driver::Driver( qi::SessionPtr session, const std::string& prefix )
   }
   else {
     naoqi::ros_env::setPrefix(prefix);
+  }
+
+  if(config_file == ""){
+    std::cout << "Using default config file, no cmdline argument provided" << std::endl;
+  } else {
+    _config_file = config_file;
   }
 
 }
@@ -156,10 +162,13 @@ void Driver::init()
 
 void Driver::loadBootConfig()
 {
-  std::string file_path = helpers::filesystem::getBootConfigFile();
 
-  if(nhPtr_->hasParam("config_file_path")) {
-    nhPtr_->getParam("config_file_path", file_path);
+  std::string file_path = "";
+
+  if(_config_file == "") {
+    file_path = helpers::filesystem::getBootConfigFile();
+  } else {
+    file_path = _config_file;
   }
 
   std::cout << "load boot config from " << file_path << std::endl;

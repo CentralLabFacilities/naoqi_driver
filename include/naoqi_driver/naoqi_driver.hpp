@@ -69,7 +69,7 @@ public:
   * @brief Constructor for naoqi driver
   * @param session[in] session pointer for naoqi2 service registration
   */
-  Driver( qi::SessionPtr session, const std::string& prefix );
+  Driver( qi::SessionPtr session, const std::string& prefix, const std::string& config_file);
 
   /**
   * @brief Destructor for naoqi driver,
@@ -289,6 +289,7 @@ private:
   std::vector< service::Service > services_;
 
   float buffer_duration_;
+  std::string _config_file = "";
 
   /** Pub Publisher to execute at a specific time */
   struct ScheduledConverter {
