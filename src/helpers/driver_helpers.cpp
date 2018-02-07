@@ -39,7 +39,7 @@ static naoqi_bridge_msgs::RobotInfo& getRobotInfoLocal( const qi::SessionPtr& se
   robot_url = session->url();
 
   // Get the robot type
-  std::cout << "Receiving information about robot model" << std::endl;
+  // std::cout << "Receiving information about robot model" << std::endl;
   qi::AnyObject p_memory = session->service("ALMemory");
   std::string robot = p_memory.call<std::string>("getData", "RobotConfig/Body/Type" );
   std::transform(robot.begin(), robot.end(), robot.begin(), ::tolower);

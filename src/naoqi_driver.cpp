@@ -131,10 +131,11 @@ Driver::Driver( qi::SessionPtr session, const std::string& prefix, const std::st
     naoqi::ros_env::setPrefix(prefix);
   }
 
-  if(config_file == ""){
-    std::cout << "Using default config file, no cmdline argument provided" << std::endl;
+  if(config_file == "default"){
+    std::cout << ">> Using default config file, no cmdline argument provided" << std::endl;
   } else {
     _config_file = config_file;
+    std::cout << ">> Using custom config file!" << std::endl;
   }
 
 }
@@ -165,7 +166,7 @@ void Driver::loadBootConfig()
 
   std::string file_path = "";
 
-  if(_config_file == "") {
+  if(_config_file == "default") {
     file_path = helpers::filesystem::getBootConfigFile();
   } else {
     file_path = _config_file;

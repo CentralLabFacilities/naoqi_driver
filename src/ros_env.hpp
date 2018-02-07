@@ -80,7 +80,7 @@ static std::string prefix = "";
 static void setPrefix( std::string s )
 {
   prefix = s;
-  std::cout << "set prefix successfully to " << prefix << std::endl;
+  // std::cout << "set prefix successfully to " << prefix << std::endl;
 }
 
 static std::string getPrefix()

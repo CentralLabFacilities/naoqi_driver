@@ -289,7 +289,7 @@ private:
   std::vector< service::Service > services_;
 
   float buffer_duration_;
-  std::string _config_file = "";
+  std::string _config_file = "default";
 
   /** Pub Publisher to execute at a specific time */
   struct ScheduledConverter {
