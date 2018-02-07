@@ -158,7 +158,7 @@ void Driver::loadBootConfig()
 {
   const std::string& file_path = helpers::filesystem::getBootConfigFile();
 
-  if(nhPtr_->hasParam("config_file_path") {
+  if(nhPtr_->hasParam("config_file_path")) {
     nhPtr_->getParam("config_file_path", file_path);
   }
 
