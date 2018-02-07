@@ -156,7 +156,7 @@ void Driver::init()
 
 void Driver::loadBootConfig()
 {
-  const std::string& file_path = helpers::filesystem::getBootConfigFile();
+  std::string file_path = helpers::filesystem::getBootConfigFile();
 
   if(nhPtr_->hasParam("config_file_path")) {
     nhPtr_->getParam("config_file_path", file_path);
@@ -166,7 +166,7 @@ void Driver::loadBootConfig()
 
   if (!file_path.empty())
   {
-    boost::property_tree::read_json( file_path, boot_config_ );
+    boost::property_tree::read_json(file_path, boot_config_);
   }
 }
 
