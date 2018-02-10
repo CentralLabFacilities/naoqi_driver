@@ -48,7 +48,7 @@ void TeleopSubscriber::cmd_vel_callback( const geometry_msgs::TwistConstPtr& twi
   const float& vel_y = twist_msg->linear.y;
   const float& vel_th = twist_msg->angular.z;
 
-  std::cout << "going to move x: " << vel_x << " y: " << vel_y << " th: " << vel_th << std::endl;
+  // std::cout << "going to move x: " << vel_x << " y: " << vel_y << " th: " << vel_th << std::endl;
   p_motion_.async<void>("move", vel_x, vel_y, vel_th );
 }
 
