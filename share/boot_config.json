@@ -54,7 +54,7 @@
       "frequency": 10
     },
     "sonar": {
-      "enabled": false,
+      "enabled": true,
       "frequency": 10
     },
     "audio": {
