@@ -192,14 +192,14 @@ inline sensor_msgs::CameraInfo createCameraInfoDEPTHQVGA()
 
   cam_info_msg.width = 320;
   cam_info_msg.height = 240;
-  cam_info_msg.K = boost::array<double, 9>{{ 525/2.0f, 0, 319.5000000/2.0f, 0, 525/2.0f, 239.5000000000000/2.0f, 0, 0, 1  }};
+  cam_info_msg.K = boost::array<double, 9>{{ 286.4931637345315, 0.0, 161.05772510763725, 0.0, 286.7532312956228, 120.01067491252732, 0.0, 0.0, 1.0 }};
 
-  //cam_info_msg.distortion_model = "plumb_bob";
-  //cam_info_msg.D = boost::assign::list_of(-0.0688388724945936)(0.0697453843669642)(0.00309518737071049)(-0.00570486993696543)(0);
+  cam_info_msg.distortion_model = "plumb_bob";
+  cam_info_msg.D = boost::assign::list_of(-0.012649589141458185)(-0.01345042601007748)(-0.007384545753933374)(-0.0003304670723656411)(0.0);
 
-  cam_info_msg.R = boost::array<double, 9>{{ 1, 0, 0, 0, 1, 0, 0, 0, 1 }};
+  cam_info_msg.R = boost::array<double, 9>{{ 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0 }};
 
-  cam_info_msg.P = boost::array<double, 12>{{ 525/2.0f, 0, 319.500000/2.0f, 0, 0, 525/2.0f, 239.5000000000/2.0f, 0, 0, 0, 1, 0 }};
+  cam_info_msg.P = boost::array<double, 12>{{ 285.67431640625, 0.0, 160.97394892113516, 0.0, 0.0, 285.96466064453125, 118.87704020494311, 0.0, 0.0, 0.0, 1.0, 0.0 }};
 
   return cam_info_msg;
 }
