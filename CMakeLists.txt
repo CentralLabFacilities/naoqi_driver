@@ -113,6 +113,7 @@ target_link_libraries(
   naoqi_driver
 )
 
-# install the urdf for runtime loading
+# We dont use the stuff in share (CLF)
+# install the urdf for runtime loading.
 # file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/share/" DESTINATION "${QI_SDK_DIR}/${QI_SDK_SHARE}/")
 # qi_install_data( share/)
