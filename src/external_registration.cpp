@@ -91,7 +91,7 @@ int main(int argc, char** argv)
     std::cout << BOLDRED << "No ip address given. Run qicli call to set the master uri" << RESETCOLOR << std::endl;
     bs->init();
   }
-
+  std::cout << BOLDYELLOW << "This version of the cpp driver can ONLY run " << BOLDCYAN << " on PEPPER HEAD (getImageLocal) " << RESETCOLOR << std::endl;
   app.run();
   bs->stopService();
   app.session()->close();
