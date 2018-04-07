@@ -470,6 +470,7 @@ void Driver::registerConverter( converter::Converter conv, publisher::Publisher 
   registerConverter( conv );
   registerPublisher( conv.name(), pub );
   // We dont need to record
+  std::cout << "Not registering a recorder for: " << conv.name() << std::endl;
   // registerRecorder( conv.name(), rec, conv.frequency() );
 }
 
@@ -482,8 +483,7 @@ void Driver::registerPublisher( converter::Converter conv, publisher::Publisher 
 void Driver::registerRecorder( converter::Converter conv, recorder::Recorder rec )
 {
   registerConverter( conv );
-  // We dont need to record
-  // registerRecorder(  conv.name(), rec, conv.frequency());
+  registerRecorder(  conv.name(), rec, conv.frequency());
 }
 
 bool Driver::registerMemoryConverter( const std::string& key, float frequency, const dataType::DataType& type ) {
