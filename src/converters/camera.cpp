@@ -212,7 +212,7 @@ void CameraConverter::callAll( const std::vector<message_actions::MessageAction>
 
   const AL::ALImage* im = p_video_.call<AL::ALImage*>("getImageLocal", handle_);
 
-  std::cout << im->height << im->width << std::endl;
+  std::cout << im->getWidth() << im->getWidth() << std::endl;
 
   // std::cout << image_anyvalue_pointer->getWidth() << std::endl;
 
@@ -253,6 +253,7 @@ void CameraConverter::callAll( const std::vector<message_actions::MessageAction>
   }
 
   p_video_.call<qi::AnyValue>("releaseImage", handle_);
+  delete im;
 }
 
 } // publisher
