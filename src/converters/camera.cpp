@@ -253,7 +253,7 @@ void CameraConverter::callAll( const std::vector<message_actions::MessageAction>
   }
 
   p_video_.call<qi::AnyValue>("releaseImage", handle_);
-  delete im;
+  // delete im;
 }
 
 } // publisher
