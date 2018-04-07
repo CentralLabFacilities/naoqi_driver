@@ -92,7 +92,7 @@ int main(int argc, char** argv)
     bs->init();
   }
 
-  std::cout << BOLDYELLOW << "This version of the cpp driver can ONLY run " << BOLDCYAN << " on PEPPER HEAD (getImageLocal) " << RESETCOLOR << std::endl;
+  // std::cout << BOLDYELLOW << "This version of the cpp driver can ONLY run " << BOLDCYAN << " on PEPPER HEAD (getImageLocal) " << RESETCOLOR << std::endl;
 
   app.run();
   bs->stopService();

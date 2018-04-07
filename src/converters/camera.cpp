@@ -21,6 +21,7 @@
 #include "camera.hpp"
 #include "camera_info_definitions.hpp"
 #include "../tools/alvisiondefinitions.h" // for kTop...
+#include "../tools/alvision.h" // for ALImage...
 #include "../tools/from_any_value.hpp"
 
 /*
@@ -206,8 +207,20 @@ void CameraConverter::callAll( const std::vector<message_actions::MessageAction>
     return;
   }
 
-  qi::AnyValue image_anyvalue = p_video_.call<qi::AnyValue>("getImageLocal", handle_);
+  qi::AnyValue image_anyvalue = p_video_.call<qi::AnyValue>("getImageRemote", handle_);
   tools::NaoqiImage image;
+
+    //  const AL::ALImage* image = p_video_.call("getImageLocal", handle_);
+    //
+    //  try {
+    //        if (image == NULL) {
+    //            std::cerr << "Could not retrieve current image." << std::endl;
+    //            return ; }
+    //  catch(std::runtime_error& e) {
+    //        std::cout << "Exception while retrieving image" << std::endl;
+    //        return; }
+    //  }
+
   try{
       image = tools::fromAnyValueToNaoqiImage(image_anyvalue);
   }
@@ -218,6 +231,7 @@ void CameraConverter::callAll( const std::vector<message_actions::MessageAction>
   }
 
   // Create a cv::Mat of the right dimensions
+  // cv::Mat cv_img(image->getHeight(), image->getWidth(), cv_mat_type_, image->getData());
   cv::Mat cv_img(image.height, image.width, cv_mat_type_, image.buffer);
   msg_ = cv_bridge::CvImage(std_msgs::Header(), msg_colorspace_, cv_img).toImageMsg();
   msg_->header.frame_id = msg_frameid_;
@@ -231,6 +245,8 @@ void CameraConverter::callAll( const std::vector<message_actions::MessageAction>
   {
     callbacks_[action]( msg_, camera_info_ );
   }
+
+  p_video_.call<qi::AnyValue>("releaseImage", handle_);
 }
 
 } // publisher
