@@ -24,6 +24,7 @@
 * ALDEBARAN includes
 */
 #include "../tools/alvisiondefinitions.h" // for kTop...
+#include "../tools/alvision.h" // for ALImage...
 
 namespace naoqi
 {

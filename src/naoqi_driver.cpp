@@ -56,6 +56,7 @@
  */
 #include "tools/robot_description.hpp"
 #include "tools/alvisiondefinitions.h" // for kTop...
+#include "tools/alvision.h" // for ALImage...
 
 /*
  * SUBSCRIBERS

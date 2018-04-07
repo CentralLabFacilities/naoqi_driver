@@ -77,7 +77,7 @@ public:
           float pLeftAngle = 0.f, float pTopAngle = 0.f,
           float pRightAngle = 0.f, float pBottomAngle = 0.f);
 
-  ~ALImage();
+//  ~ALImage();
 
   /**deepcopy
     *@brief data-ownership copy creation

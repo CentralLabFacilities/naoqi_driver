@@ -20,11 +20,14 @@ set(
   src/converters/sonar.cpp
   src/converters/log.cpp
   src/converters/odom.cpp
+  src/tools/alvision.h
   )
 set(
   TOOLS_SRC
   src/tools/robot_description.cpp
   src/tools/from_any_value.cpp
+  src/tools/alvision.h
+  src/tools/alvisiondefinitions.h
   )
 
 set(
@@ -34,6 +37,7 @@ set(
   src/publishers/joint_state.cpp
   src/publishers/log.cpp
   src/publishers/sonar.cpp
+  src/tools/alvision.h
   )
 
 set(
@@ -41,11 +45,13 @@ set(
   src/subscribers/teleop.cpp
   src/subscribers/moveto.cpp
   src/subscribers/speech.cpp
+  src/tools/alvision.h
   )
 
 set(
   SERVICES_SRC
   src/services/robot_config.cpp
+  src/tools/alvision.h
   )
 
 set(
@@ -55,6 +61,7 @@ set(
   src/recorder/joint_state.cpp
   src/recorder/log.cpp
   src/recorder/sonar.cpp
+  src/tools/alvision.h
   )
 
 set(
@@ -66,6 +73,7 @@ set(
   src/event/basic.hpp
   src/event/audio.cpp
   src/event/touch.cpp
+  src/tools/alvision.h
   )
 
 # use catkin if qibuild is not found
@@ -108,6 +116,7 @@ target_link_libraries(
 )
 
 qi_create_bin( naoqi_driver_node src/external_registration.cpp)
+
 target_link_libraries(
   naoqi_driver_node
   naoqi_driver

@@ -210,7 +210,13 @@ void CameraConverter::callAll( const std::vector<message_actions::MessageAction>
   qi::AnyValue image_anyvalue = p_video_.call<qi::AnyValue>("getImageRemote", handle_);
   tools::NaoqiImage image;
 
-    //  const AL::ALImage* image = p_video_.call("getImageLocal", handle_);
+  const AL::ALImage* im = p_video_.call<AL::ALImage*>("getImageLocal", handle_);
+
+  std::cout << im->height << im->width << std::endl;
+
+  // std::cout << image_anyvalue_pointer->getWidth() << std::endl;
+
+  // const AL::ALImage* im
     //
     //  try {
     //        if (image == NULL) {
