@@ -468,8 +468,9 @@ void Driver::insertEventConverter(const std::string& key, event::Event event)
 void Driver::registerConverter( converter::Converter conv, publisher::Publisher pub, recorder::Recorder rec )
 {
   registerConverter( conv );
-  registerPublisher( conv.name(), pub);
-  registerRecorder(  conv.name(), rec, conv.frequency());
+  registerPublisher( conv.name(), pub );
+  // We dont need to record
+  // registerRecorder( conv.name(), rec, conv.frequency() );
 }
 
 void Driver::registerPublisher( converter::Converter conv, publisher::Publisher pub )
@@ -481,7 +482,8 @@ void Driver::registerPublisher( converter::Converter conv, publisher::Publisher 
 void Driver::registerRecorder( converter::Converter conv, recorder::Recorder rec )
 {
   registerConverter( conv );
-  registerRecorder(  conv.name(), rec, conv.frequency());
+  // We dont need to record
+  // registerRecorder(  conv.name(), rec, conv.frequency());
 }
 
 bool Driver::registerMemoryConverter( const std::string& key, float frequency, const dataType::DataType& type ) {
@@ -687,7 +689,7 @@ void Driver::registerDefaultConverter()
     registerConverter( fcc, fcp, fcr );
   }
 
-  /** Front Camera */
+  /** Bottom Camera */
   if ( camera_bottom_enabled )
   {
     boost::shared_ptr<publisher::CameraPublisher> bcp = boost::make_shared<publisher::CameraPublisher>( "camera/bottom/image_raw", AL::kBottomCamera );

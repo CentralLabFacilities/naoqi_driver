@@ -66,6 +66,11 @@ const sensor_msgs::CameraInfo& getCameraInfo( int camera_source, int resolution 
       static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoTOPVGA();
       return cam_info_msg;
     }
+    else if( resolution == AL::k4VGA )
+    {
+      static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoTOP4VGA();
+      return cam_info_msg;
+    }
     else if( resolution == AL::kQVGA )
     {
       static const sensor_msgs::CameraInfo cam_info_msg = createCameraInfoTOPQVGA();
@@ -201,7 +206,7 @@ void CameraConverter::callAll( const std::vector<message_actions::MessageAction>
     return;
   }
 
-  qi::AnyValue image_anyvalue = p_video_.call<qi::AnyValue>("getImageRemote", handle_);
+  qi::AnyValue image_anyvalue = p_video_.call<qi::AnyValue>("getImageLocal", handle_);
   tools::NaoqiImage image;
   try{
       image = tools::fromAnyValueToNaoqiImage(image_anyvalue);
@@ -218,8 +223,8 @@ void CameraConverter::callAll( const std::vector<message_actions::MessageAction>
   msg_->header.frame_id = msg_frameid_;
 
   msg_->header.stamp = ros::Time::now();
-  //msg_->header.stamp.sec = image.timestamp_s;
-  //msg_->header.stamp.nsec = image.timestamp_us*1000;
+  // msg_->header.stamp.sec = image.timestamp_s;
+  // msg_->header.stamp.nsec = image.timestamp_us*1000;
   camera_info_.header.stamp = msg_->header.stamp;
 
   for_each( const message_actions::MessageAction& action, actions )
