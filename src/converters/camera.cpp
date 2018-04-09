@@ -233,7 +233,7 @@ void CameraConverter::callAll( const std::vector<message_actions::MessageAction>
   catch(std::runtime_error& e)
   {
     std::cout << "Cannot retrieve image" << std::endl;
-    std::cout << e.c_str() << std::endl;
+    // std::cout << e.c_str() << std::endl;
     return;
   }
 
