@@ -30,8 +30,8 @@ TeleopSubscriber::TeleopSubscriber( const std::string& name, const std::string& 
   cmd_vel_topic_(cmd_vel_topic),
   joint_angles_topic_(joint_angles_topic),
   BaseSubscriber( name, cmd_vel_topic, session ),
-  p_motion_( session->service("ALMotion") )
-  p_motion_controller_( session->service("MotionController") )
+  p_motion_( session->service("ALMotion") );
+  p_motion_controller_( session->service("MotionController") );
 {}
 
 void TeleopSubscriber::reset( ros::NodeHandle& nh )
