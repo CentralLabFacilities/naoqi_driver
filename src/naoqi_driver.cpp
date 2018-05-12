@@ -910,7 +910,9 @@ void Driver::registerService( service::Service srv )
 void Driver::registerDefaultServices()
 {
   registerService( boost::make_shared<service::RobotConfigService>("robot config service", "/naoqi_driver/get_robot_config", sessionPtr_) );
-  registerService( boost::make_shared<service::CameraService>("camera image service", "/naoqi_driver/get_images", sessionPtr_, AL::kDepthCamera, 1, 1) );
+  size_t camera_depth_resolution      = boot_config_.get( "converters.depth_camera.resolution", 1); // QVGA
+  size_t camera_depth_fps             = boot_config_.get( "converters.depth_camera.fps", 10);
+  registerService( boost::make_shared<service::CameraService>("camera image service", "/naoqi_driver/get_images", sessionPtr_, AL::kDepthCamera, camera_depth_resolution, camera_depth_fps) );
 }
 
 std::vector<std::string> Driver::getAvailableConverters()

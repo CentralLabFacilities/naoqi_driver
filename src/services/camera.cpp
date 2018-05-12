@@ -36,6 +36,8 @@ CameraService::CameraService( const std::string& name, const std::string& topic,
   camera_source_(camera_source),
   resolution_(resolution),
   colorspace_( (camera_source_!=AL::kDepthCamera)?AL::kRGBColorSpace:AL::kRawDepthColorSpace ),
+  msg_colorspace_( (camera_source_!=AL::kDepthCamera)?"rgb8":"16UC1" ),
+  cv_mat_type_( (camera_source_!=AL::kDepthCamera)?CV_8UC3:CV_16U ),
   frequency_(frequency),
   topic_(topic),
   session_(session)
