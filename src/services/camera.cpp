@@ -69,18 +69,19 @@ CameraService::CameraService( const std::string& name, const std::string& topic,
 void CameraService::reset( ros::NodeHandle& nh )
 {
   service_ = nh.advertiseService(topic_, &CameraService::callback, this);
+
+  handle_ = p_video_.call<std::string>(
+                         "subscribeCamera",
+                          name_,
+                          camera_source_,
+                          resolution_,
+                          colorspace_,
+                          frequency_
+                          );
 }
 
 bool CameraService::callback( pepper_clf_msgs::DepthAndColorImage::Request &req, pepper_clf_msgs::DepthAndColorImage::Response &resp )
 {
-    handle_ = p_video_.call<std::string>(
-                           "subscribeCamera",
-                            "depth_camera",
-                            camera_source_,
-                            resolution_,
-                            colorspace_,
-                            frequency_
-                            );
 
     qi::AnyValue image_anyvalue = p_video_.call<qi::AnyValue>("getImageRemote", handle_);
     tools::NaoqiImage image;
