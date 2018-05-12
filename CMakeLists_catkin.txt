@@ -21,6 +21,7 @@ find_package(catkin COMPONENTS
   tf2_geometry_msgs
   tf2_msgs
   tf2_ros
+  pepper_clf_msgs
 )
 find_package(OpenCV)
 find_package(orocos_kdl)

@@ -69,6 +69,7 @@
  * SERVICES
  */
 #include "services/robot_config.hpp"
+#include "services/camera.hpp"
 
 /*
  * RECORDERS
@@ -440,6 +441,7 @@ void Driver::registerConverter( converter::Converter& conv )
   conv.reset();
   conv_queue_.push(ScheduledConverter(ros::Time::now(), conv_index));
 }
+
 
 void Driver::registerPublisher( const std::string& conv_name, publisher::Publisher& pub)
 {
@@ -908,6 +910,7 @@ void Driver::registerService( service::Service srv )
 void Driver::registerDefaultServices()
 {
   registerService( boost::make_shared<service::RobotConfigService>("robot config service", "/naoqi_driver/get_robot_config", sessionPtr_) );
+  registerService( boost::make_shared<service::CameraService>("camera image service", "/naoqi_driver/get_images", sessionPtr_, AL::kDepthCamera, 1, 1) );
 }
 
 std::vector<std::string> Driver::getAvailableConverters()

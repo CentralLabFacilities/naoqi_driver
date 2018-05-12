@@ -29,6 +29,7 @@
   <build_depend>tf2_geometry_msgs</build_depend>
   <build_depend>tf2_msgs</build_depend>
   <build_depend>tf2_ros</build_depend>
+  <build_depend>pepper_clf_msgs</build_depend>
 
   <buildtool_depend>catkin</buildtool_depend>
 
@@ -44,6 +45,7 @@
   <run_depend>rosbag_storage</run_depend>
   <run_depend>rosconsole</run_depend>
   <run_depend>tf2_ros</run_depend>
+  <run_depend>pepper_clf_msgs</run_depend>
 
   <conflict>nao_driver</conflict>
   <conflict>naoqi_rosbridge</conflict>
