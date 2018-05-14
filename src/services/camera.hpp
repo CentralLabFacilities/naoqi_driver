@@ -46,7 +46,7 @@ namespace service
 class CameraService
 {
 public:
-  CameraService( const std::string& name, const std::string& topic, const qi::SessionPtr& session, const int& camera_source, const int& resolution, const float& frequency );
+  CameraService( const std::string& name, const std::string& topic, const qi::SessionPtr& session, const int& camera_source_depth, const int& resolution_depth, const float& frequency_depth,const int& camera_source_front, const int& resolution_front, const float& frequency_front );
 
   ~CameraService(){};
 
@@ -69,15 +69,25 @@ private:
   const std::string name_;
   const std::string topic_;
   qi::AnyObject p_video_;
-  int camera_source_;
-  int resolution_;
-  int colorspace_;
-  float frequency_;
-  std::string handle_;
 
-  std::string msg_colorspace_;
-  int cv_mat_type_;
-  std::string msg_frameid_;
+  int camera_source_depth_;
+  int resolution_depth_;
+  int colorspace_depth_;
+  float frequency_depth_;
+  std::string handle_depth_;
+  std::string msg_colorspace_depth_;
+  int cv_mat_type_depth_;
+  std::string msg_frameid_depth_;
+
+  int camera_source_front_;
+  int resolution_front_;
+  int colorspace_front_;
+  float frequency_front_;
+  std::string handle_front_;
+  std::string msg_colorspace_front_;
+  int cv_mat_type_front_;
+  std::string msg_frameid_front_;
+
   sensor_msgs::CameraInfo camera_info_;
 
   const qi::SessionPtr& session_;

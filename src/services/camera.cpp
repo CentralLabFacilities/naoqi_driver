@@ -30,39 +30,69 @@ namespace naoqi
 namespace service
 {
 
-CameraService::CameraService( const std::string& name, const std::string& topic, const qi::SessionPtr& session, const int& camera_source, const int& resolution, const float& frequency )
+CameraService::CameraService( const std::string& name, const std::string& topic, const qi::SessionPtr& session, const int& camera_source_depth, const int& resolution_depth, const float& frequency_depth,
+                              const int& camera_source_front, const int& resolution_front, const float& frequency_front)
   : name_(name),
   p_video_( session->service("ALVideoDevice") ),
-  camera_source_(camera_source),
-  resolution_(resolution),
-  colorspace_( (camera_source_!=AL::kDepthCamera)?AL::kRGBColorSpace:AL::kRawDepthColorSpace ),
-  msg_colorspace_( (camera_source_!=AL::kDepthCamera)?"rgb8":"16UC1" ),
-  cv_mat_type_( (camera_source_!=AL::kDepthCamera)?CV_8UC3:CV_16U ),
-  frequency_(frequency),
-  topic_(topic),
+  camera_source_depth_(camera_source_depth),
+  resolution_depth_(resolution_depth),
+  colorspace_depth_( (camera_source_depth_!=AL::kDepthCamera)?AL::kRGBColorSpace:AL::kRawDepthColorSpace ),
+  msg_colorspace_depth_( (camera_source_depth_!=AL::kDepthCamera)?"rgb8":"16UC1" ),
+  cv_mat_type_depth_( (camera_source_depth_!=AL::kDepthCamera)?CV_8UC3:CV_16U ),
+  frequency_depth_(frequency_depth),
+  topic_(topic_),
+  camera_source_front_(camera_source_front),
+  resolution_front_(resolution_front),
+  colorspace_front_( (camera_source_front_!=AL::kDepthCamera)?AL::kRGBColorSpace:AL::kRawDepthColorSpace ),
+  msg_colorspace_front_( (camera_source_front_!=AL::kDepthCamera)?"rgb8":"16UC1" ),
+  cv_mat_type_front_( (camera_source_front_!=AL::kDepthCamera)?CV_8UC3:CV_16U ),
+  frequency_front_(frequency_front),
   session_(session)
 {
-    if ( camera_source == AL::kTopCamera )
+    if ( camera_source_depth_ == AL::kTopCamera )
     {
-      msg_frameid_ = "CameraTop_optical_frame";
+      msg_frameid_depth_ = "CameraTop_optical_frame";
     }
-    else if (camera_source == AL::kBottomCamera )
+    else if (camera_source_depth_ == AL::kBottomCamera )
     {
-      msg_frameid_ = "CameraBottom_optical_frame";
+      msg_frameid_depth_ = "CameraBottom_optical_frame";
     }
-    else if (camera_source_ == AL::kDepthCamera )
+    else if (camera_source_depth_ == AL::kDepthCamera )
     {
-      msg_frameid_ = "CameraDepth_optical_frame";
+      msg_frameid_depth_ = "CameraDepth_optical_frame";
     }
     // Overwrite the parameters for the infrared
-    else if (camera_source_ == AL::kInfraredCamera )
+    else if (camera_source_depth_ == AL::kInfraredCamera )
     {
       // Reset to kDepth since it's the same device handle
-      camera_source_ = AL::kDepthCamera;
-      msg_frameid_ = "CameraDepth_optical_frame";
-      colorspace_ = AL::kInfraredColorSpace;
-      msg_colorspace_ = "16UC1";
-      cv_mat_type_ = CV_16U;
+      camera_source_depth_ = AL::kDepthCamera;
+      msg_frameid_depth_ = "CameraDepth_optical_frame";
+      colorspace_depth_ = AL::kInfraredColorSpace;
+      msg_colorspace_depth_ = "16UC1";
+      cv_mat_type_depth_ = CV_16U;
+    }
+
+    if ( camera_source_front_ == AL::kTopCamera )
+    {
+      msg_frameid_front_ = "CameraTop_optical_frame";
+    }
+    else if (camera_source_front_ == AL::kBottomCamera )
+    {
+      msg_frameid_front_ = "CameraBottom_optical_frame";
+    }
+    else if (camera_source_front_ == AL::kDepthCamera )
+    {
+      msg_frameid_front_ = "CameraDepth_optical_frame";
+    }
+    // Overwrite the parameters for the infrared
+    else if (camera_source_front_ == AL::kInfraredCamera )
+    {
+      // Reset to kDepth since it's the same device handle
+      camera_source_front_ = AL::kDepthCamera;
+      msg_frameid_front_ = "CameraDepth_optical_frame";
+      colorspace_front_ = AL::kInfraredColorSpace;
+      msg_colorspace_front_ = "16UC1";
+      cv_mat_type_front_ = CV_16U;
     }
 }
 
@@ -70,20 +100,29 @@ void CameraService::reset( ros::NodeHandle& nh )
 {
   service_ = nh.advertiseService(topic_, &CameraService::callback, this);
 
-  handle_ = p_video_.call<std::string>(
+  handle_depth_ = p_video_.call<std::string>(
                          "subscribeCamera",
                           name_,
-                          camera_source_,
-                          resolution_,
-                          colorspace_,
-                          frequency_
+                          camera_source_depth_,
+                          resolution_depth_,
+                          colorspace_depth_,
+                          frequency_depth_
+                          );
+
+  handle_front_ = p_video_.call<std::string>(
+                         "subscribeCamera",
+                          name_,
+                          camera_source_front_,
+                          resolution_front_,
+                          colorspace_front_,
+                          frequency_front_
                           );
 }
 
 bool CameraService::callback( pepper_clf_msgs::DepthAndColorImage::Request &req, pepper_clf_msgs::DepthAndColorImage::Response &resp )
 {
 
-    qi::AnyValue image_anyvalue = p_video_.call<qi::AnyValue>("getImageRemote", handle_);
+    qi::AnyValue image_anyvalue = p_video_.call<qi::AnyValue>("getImageRemote", handle_depth_);
     tools::NaoqiImage image;
 
     try{
@@ -91,16 +130,34 @@ bool CameraService::callback( pepper_clf_msgs::DepthAndColorImage::Request &req,
     }
     catch(std::runtime_error& e)
     {
-      std::cout << "Cannot retrieve image" << std::endl;
+      std::cout << "Cannot retrieve depth image" << std::endl;
       return false;
     }
 
-    cv::Mat cv_img(image.height, image.width, cv_mat_type_, image.buffer);
-    resp.depth = *cv_bridge::CvImage(std_msgs::Header(), msg_colorspace_, cv_img).toImageMsg();
-    resp.depth.header.frame_id = msg_frameid_;
+    cv::Mat cv_img_depth(image.height, image.width, cv_mat_type_depth_, image.buffer);
+    resp.depth = *cv_bridge::CvImage(std_msgs::Header(), msg_colorspace_depth_, cv_img_depth).toImageMsg();
+    resp.depth.header.frame_id = msg_frameid_depth_;
 
     resp.depth.header.stamp = ros::Time::now();
-    p_video_.call<qi::AnyValue>("releaseImage", handle_);
+    p_video_.call<qi::AnyValue>("releaseImage", handle_depth_);
+
+    image_anyvalue = p_video_.call<qi::AnyValue>("getImageRemote", handle_front_);
+
+    try{
+        image = tools::fromAnyValueToNaoqiImage(image_anyvalue);
+    }
+    catch(std::runtime_error& e)
+    {
+      std::cout << "Cannot retrieve front image" << std::endl;
+      return false;
+    }
+
+    cv::Mat cv_img_front(image.height, image.width, cv_mat_type_front_, image.buffer);
+    resp.color = *cv_bridge::CvImage(std_msgs::Header(), msg_colorspace_front_, cv_img_front).toImageMsg();
+    resp.color.header.frame_id = msg_frameid_front_;
+
+    resp.color.header.stamp = ros::Time::now();
+    p_video_.call<qi::AnyValue>("releaseImage", handle_front_);
 
     return true;
 }
