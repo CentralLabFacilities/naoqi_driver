@@ -160,6 +160,7 @@ bool CameraService::callback( pepper_clf_msgs::DepthAndColorImage::Request &req,
     resp.color.header.stamp = ros::Time::now();
     p_video_.call<qi::AnyValue>("releaseImage", handle_front_);
 
+    resp.success = true;
     return true;
 }
 
