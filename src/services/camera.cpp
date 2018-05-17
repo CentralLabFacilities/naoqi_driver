@@ -49,20 +49,20 @@ CameraService::CameraService( const std::string& name, const std::string& topic,
   frequency_front_(frequency_front),
   session_(session)
 {
-    if ( camera_source_depth_ == AL::kTopCamera )
+    if ( camera_source_depth == AL::kTopCamera )
     {
       msg_frameid_depth_ = "CameraTop_optical_frame";
     }
-    else if (camera_source_depth_ == AL::kBottomCamera )
+    else if (camera_source_depth == AL::kBottomCamera )
     {
       msg_frameid_depth_ = "CameraBottom_optical_frame";
     }
-    else if (camera_source_depth_ == AL::kDepthCamera )
+    else if (camera_source_depth == AL::kDepthCamera )
     {
       msg_frameid_depth_ = "CameraDepth_optical_frame";
     }
     // Overwrite the parameters for the infrared
-    else if (camera_source_depth_ == AL::kInfraredCamera )
+    else if (camera_source_depth == AL::kInfraredCamera )
     {
       // Reset to kDepth since it's the same device handle
       camera_source_depth_ = AL::kDepthCamera;
@@ -72,20 +72,20 @@ CameraService::CameraService( const std::string& name, const std::string& topic,
       cv_mat_type_depth_ = CV_16U;
     }
 
-    if ( camera_source_front_ == AL::kTopCamera )
+    if ( camera_source_front == AL::kTopCamera )
     {
       msg_frameid_front_ = "CameraTop_optical_frame";
     }
-    else if (camera_source_front_ == AL::kBottomCamera )
+    else if (camera_source_front == AL::kBottomCamera )
     {
       msg_frameid_front_ = "CameraBottom_optical_frame";
     }
-    else if (camera_source_front_ == AL::kDepthCamera )
+    else if (camera_source_front == AL::kDepthCamera )
     {
       msg_frameid_front_ = "CameraDepth_optical_frame";
     }
     // Overwrite the parameters for the infrared
-    else if (camera_source_front_ == AL::kInfraredCamera )
+    else if (camera_source_front == AL::kInfraredCamera )
     {
       // Reset to kDepth since it's the same device handle
       camera_source_front_ = AL::kDepthCamera;
@@ -122,6 +122,7 @@ void CameraService::reset( ros::NodeHandle& nh )
 bool CameraService::callback( pepper_clf_msgs::DepthAndColorImage::Request &req, pepper_clf_msgs::DepthAndColorImage::Response &resp )
 {
 
+    std::cout << "name: " << name_ << " camera_source: " << camera_source_depth_ << " resolution: " << resolution_depth_ << " colorspace: " << colorspace_depth_ << " frequency: " << frequency_depth_;
     qi::AnyValue image_anyvalue = p_video_.call<qi::AnyValue>("getImageRemote", handle_depth_);
     tools::NaoqiImage image;
 
