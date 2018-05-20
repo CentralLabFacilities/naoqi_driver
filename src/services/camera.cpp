@@ -33,7 +33,8 @@ namespace service
 CameraService::CameraService( const std::string& name, const std::string& topic, const qi::SessionPtr& session, const int& camera_source_depth, const int& resolution_depth, const float& frequency_depth,
                               const int& camera_source_front, const int& resolution_front, const float& frequency_front)
   : name_(name),
-  p_video_( session->service("ALVideoDevice") ),
+  p_video_depth_( session->service("ALVideoDevice") ),
+  p_video_color_( session->service("ALVideoDevice") ),
   camera_source_depth_(camera_source_depth),
   resolution_depth_(resolution_depth),
   colorspace_depth_( (camera_source_depth!=AL::kDepthCamera)?AL::kRGBColorSpace:AL::kRawDepthColorSpace ),
@@ -100,7 +101,7 @@ void CameraService::reset( ros::NodeHandle& nh )
 {
   service_ = nh.advertiseService(topic_, &CameraService::callback, this);
 
-  handle_depth_ = p_video_.call<std::string>(
+  handle_depth_ = p_video_depth_.call<std::string>(
                          "subscribeCamera",
                           name_,
                           camera_source_depth_,
@@ -109,7 +110,7 @@ void CameraService::reset( ros::NodeHandle& nh )
                           frequency_depth_
                           );
 
-  handle_front_ = p_video_.call<std::string>(
+  handle_front_ = p_video_color_.call<std::string>(
                          "subscribeCamera",
                           name_,
                           camera_source_front_,
@@ -123,7 +124,7 @@ bool CameraService::callback( pepper_clf_msgs::DepthAndColorImage::Request &req,
 {
 
     std::cout << "name: " << name_ << " camera_source: " << camera_source_depth_ << " resolution: " << resolution_depth_ << " colorspace: " << colorspace_depth_ << " frequency: " << frequency_depth_;
-    qi::AnyValue image_anyvalue = p_video_.call<qi::AnyValue>("getImageRemote", handle_depth_);
+    qi::AnyValue image_anyvalue = p_video_depth_.call<qi::AnyValue>("getImageRemote", handle_depth_);
     tools::NaoqiImage image;
 
     try{
@@ -140,9 +141,9 @@ bool CameraService::callback( pepper_clf_msgs::DepthAndColorImage::Request &req,
     resp.depth.header.frame_id = msg_frameid_depth_;
 
     resp.depth.header.stamp = ros::Time::now();
-    p_video_.call<qi::AnyValue>("releaseImage", handle_depth_);
+    p_video_depth_.call<qi::AnyValue>("releaseImage", handle_depth_);
 
-    image_anyvalue = p_video_.call<qi::AnyValue>("getImageRemote", handle_front_);
+    image_anyvalue = p_video_color_.call<qi::AnyValue>("getImageRemote", handle_front_);
 
     try{
         image = tools::fromAnyValueToNaoqiImage(image_anyvalue);
@@ -158,7 +159,7 @@ bool CameraService::callback( pepper_clf_msgs::DepthAndColorImage::Request &req,
     resp.color.header.frame_id = msg_frameid_front_;
 
     resp.color.header.stamp = ros::Time::now();
-    p_video_.call<qi::AnyValue>("releaseImage", handle_front_);
+    p_video_color_.call<qi::AnyValue>("releaseImage", handle_front_);
 
     resp.success = true;
     return true;

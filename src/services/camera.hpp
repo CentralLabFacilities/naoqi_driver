@@ -68,7 +68,8 @@ public:
 private:
   const std::string name_;
   const std::string topic_;
-  qi::AnyObject p_video_;
+  qi::AnyObject p_video_depth_;
+  qi::AnyObject p_video_color_;
 
   int camera_source_depth_;
   int resolution_depth_;
