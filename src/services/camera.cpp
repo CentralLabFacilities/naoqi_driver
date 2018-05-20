@@ -131,7 +131,7 @@ bool CameraService::callback( pepper_clf_msgs::DepthAndColorImage::Request &req,
     }
     catch(std::runtime_error& e)
     {
-      std::cout << "Cannot retrieve depth image" << std::endl;
+      std::cout << "Cannot retrieve depth image " << e.what() << std::endl;
       return false;
     }
 
