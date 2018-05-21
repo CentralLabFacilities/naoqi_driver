@@ -955,7 +955,7 @@ void Driver::setMasterURINet( const std::string& uri, const std::string& network
   boost::mutex::scoped_lock lock( mutex_conv_queue_ );
 
   // Stopping the loop if there is any
-  //stopRosLoop();
+  // stopRosLoop();
 
   // Reinitializing ROS Node
   {
@@ -973,7 +973,7 @@ void Driver::setMasterURINet( const std::string& uri, const std::string& network
     std::cout << BOLDRED << "going to register converters" << RESETCOLOR << std::endl;
     registerDefaultConverter();
     registerDefaultSubscriber();
-//    startRosLoop();
+    // startRosLoop();
   }
   else
   {
