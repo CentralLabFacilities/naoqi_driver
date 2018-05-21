@@ -82,4 +82,4 @@ void CameraPublisher::reset( ros::NodeHandle& nh )
 }
 
 } // publisher
-} //naoqi
+} // naoqi

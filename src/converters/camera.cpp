@@ -211,21 +211,18 @@ void CameraConverter::callAll( const std::vector<message_actions::MessageAction>
   tools::NaoqiImage image;
 
   // const AL::ALImage* im = p_video_.call<AL::ALImage*>("getImageLocal", handle_);
-
   // std::cout << im->getWidth() << im->getWidth() << std::endl;
-
   // std::cout << image_anyvalue_pointer->getWidth() << std::endl;
-
   // const AL::ALImage* im
-    //
-    //  try {
-    //        if (image == NULL) {
-    //            std::cerr << "Could not retrieve current image." << std::endl;
-    //            return ; }
-    //  catch(std::runtime_error& e) {
-    //        std::cout << "Exception while retrieving image" << std::endl;
-    //        return; }
-    //  }
+  //
+  //  try {
+  //        if (image == NULL) {
+  //            std::cerr << "Could not retrieve current image." << std::endl;
+  //            return ; }
+  //  catch(std::runtime_error& e) {
+  //        std::cout << "Exception while retrieving image" << std::endl;
+  //        return; }
+  //  }
 
   try{
       image = tools::fromAnyValueToNaoqiImage(image_anyvalue);
@@ -242,7 +239,6 @@ void CameraConverter::callAll( const std::vector<message_actions::MessageAction>
   cv::Mat cv_img(image.height, image.width, cv_mat_type_, image.buffer);
   msg_ = cv_bridge::CvImage(std_msgs::Header(), msg_colorspace_, cv_img).toImageMsg();
   msg_->header.frame_id = msg_frameid_;
-
   msg_->header.stamp = ros::Time::now();
   // msg_->header.stamp.sec = image.timestamp_s;
   // msg_->header.stamp.nsec = image.timestamp_us*1000;
@@ -258,4 +254,4 @@ void CameraConverter::callAll( const std::vector<message_actions::MessageAction>
 }
 
 } // publisher
-} //naoqi
+} // naoqi
