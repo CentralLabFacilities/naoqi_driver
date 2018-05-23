@@ -123,16 +123,16 @@ void CameraService::reset( ros::NodeHandle& nh )
 bool CameraService::callback( pepper_clf_msgs::DepthAndColorImage::Request &req, pepper_clf_msgs::DepthAndColorImage::Response &resp )
 {
 
-    std::cout << "name: " << name_ << " camera_source: " << camera_source_depth_ << " resolution: " << resolution_depth_ << " colorspace: " << colorspace_depth_ << " frequency: " << frequency_depth_;
+    // std::cout << "name: " << name_ << " camera_source: " << camera_source_depth_ << " resolution: " << resolution_depth_ << " colorspace: " << colorspace_depth_ << " frequency: " << frequency_depth_;
     qi::AnyValue image_anyvalue = p_video_depth_.call<qi::AnyValue>("getImageRemote", handle_depth_);
     tools::NaoqiImage image;
 
     try{
         image = tools::fromAnyValueToNaoqiImage(image_anyvalue);
-    }
-    catch(std::runtime_error& e)
-    {
-      std::cout << "Cannot retrieve depth image " << e.what() << std::endl;
+    } catch (std::runtime_error& e) {
+      // std::cout << "Cannot retrieve depth image " << e.what() << std::endl;
+      ROS_ERROR(">>> Cannot retrieve depth image: %s", e.what());
+      resp.success = false;
       return false;
     }
 
@@ -147,10 +147,10 @@ bool CameraService::callback( pepper_clf_msgs::DepthAndColorImage::Request &req,
 
     try{
         image = tools::fromAnyValueToNaoqiImage(image_anyvalue);
-    }
-    catch(std::runtime_error& e)
-    {
-      std::cout << "Cannot retrieve front image" << std::endl;
+    } catch(std::runtime_error& e) {
+      // std::cout << "Cannot retrieve front image" << std::endl;
+      ROS_ERROR(">>> Cannot retrieve color image: %s", e.what());
+      resp.success = false;
       return false;
     }
 
@@ -164,7 +164,5 @@ bool CameraService::callback( pepper_clf_msgs::DepthAndColorImage::Request &req,
     resp.success = true;
     return true;
 }
-
-
 }
 }
