@@ -97,6 +97,19 @@ CameraService::CameraService( const std::string& name, const std::string& topic,
     }
 }
 
+void CameraService::~CameraService() {
+    if (!handle_depth_.empty())
+    {
+      p_video_.call<qi::AnyValue>("unsubscribe", handle_depth_);
+      handle_depth_.clear();
+    }
+    if (!handle_front_.empty())
+    {
+      p_video_.call<qi::AnyValue>("unsubscribe", handle_front_);
+      handle_front_.clear();
+    }
+}
+
 void CameraService::reset( ros::NodeHandle& nh )
 {
   service_ = nh.advertiseService(topic_, &CameraService::callback, this);
