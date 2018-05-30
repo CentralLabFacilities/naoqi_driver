@@ -49,7 +49,7 @@ CameraService::CameraService( const std::string& name, const std::string& topic,
   cv_mat_type_front_( (camera_source_front!=AL::kDepthCamera)?CV_8UC3:CV_16U ),
   frequency_front_(frequency_front),
   session_(session)
-{
+  {
     if ( camera_source_depth == AL::kTopCamera )
     {
       msg_frameid_depth_ = "CameraTop_optical_frame";
@@ -95,7 +95,7 @@ CameraService::CameraService( const std::string& name, const std::string& topic,
       msg_colorspace_front_ = "16UC1";
       cv_mat_type_front_ = CV_16U;
     }
-}
+  }
 
 CameraService::~CameraService() {
     if (!handle_depth_.empty())
@@ -133,6 +133,8 @@ void CameraService::reset( ros::NodeHandle& nh )
                           colorspace_front_,
                           frequency_front_
                           );
+
+  ROS_INFO("[Service] resetting camera");
 }
 
 bool CameraService::callback( pepper_clf_msgs::DepthAndColorImage::Request &req, pepper_clf_msgs::DepthAndColorImage::Response &resp )
