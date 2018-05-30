@@ -117,7 +117,7 @@ void CameraService::reset( ros::NodeHandle& nh )
   service_ = nh.advertiseService(topic_, &CameraService::callback, this);
 
   handle_depth_ = p_video_depth_.call<std::string>(
-                         "subscribeCameraServiceDepth",
+                         "subscribeCamera",
                           name_,
                           camera_source_depth_,
                           resolution_depth_,
@@ -126,7 +126,7 @@ void CameraService::reset( ros::NodeHandle& nh )
                           );
 
   handle_front_ = p_video_color_.call<std::string>(
-                         "subscribeCameraServiceRGB",
+                         "subscribeCamera",
                           name_,
                           camera_source_front_,
                           resolution_front_,
