@@ -100,13 +100,13 @@ CameraService::CameraService( const std::string& name, const std::string& topic,
 CameraService::~CameraService() {
     if (!handle_depth_.empty())
     {
-      p_video_.call<qi::AnyValue>("unsubscribe", handle_depth_);
+      p_video_depth_.call<qi::AnyValue>("unsubscribe", handle_depth_);
       handle_depth_.clear();
       ROS_INFO(">>> [Service] Camera Depth Unsubscribe");
     }
     if (!handle_front_.empty())
     {
-      p_video_.call<qi::AnyValue>("unsubscribe", handle_front_);
+      p_video_color_.call<qi::AnyValue>("unsubscribe", handle_front_);
       handle_front_.clear();
       ROS_INFO(">>> [Service] Camera RGB Unsubscribe");
     }
