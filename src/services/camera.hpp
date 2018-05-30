@@ -48,7 +48,7 @@ class CameraService
 public:
   CameraService( const std::string& name, const std::string& topic, const qi::SessionPtr& session, const int& camera_source_depth, const int& resolution_depth, const float& frequency_depth,const int& camera_source_front, const int& resolution_front, const float& frequency_front );
 
-  ~CameraService(){};
+  ~CameraService();
 
   std::string name() const
   {
