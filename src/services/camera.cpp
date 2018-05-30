@@ -102,11 +102,13 @@ void CameraService::~CameraService() {
     {
       p_video_.call<qi::AnyValue>("unsubscribe", handle_depth_);
       handle_depth_.clear();
+      ROS_INFO(">>> [Service] Camera Depth Unsubscribe");
     }
     if (!handle_front_.empty())
     {
       p_video_.call<qi::AnyValue>("unsubscribe", handle_front_);
       handle_front_.clear();
+      ROS_INFO(">>> [Service] Camera RGB Unsubscribe");
     }
 }
 
@@ -115,7 +117,7 @@ void CameraService::reset( ros::NodeHandle& nh )
   service_ = nh.advertiseService(topic_, &CameraService::callback, this);
 
   handle_depth_ = p_video_depth_.call<std::string>(
-                         "subscribeCamera",
+                         "subscribeCameraServiceDepth",
                           name_,
                           camera_source_depth_,
                           resolution_depth_,
@@ -124,7 +126,7 @@ void CameraService::reset( ros::NodeHandle& nh )
                           );
 
   handle_front_ = p_video_color_.call<std::string>(
-                         "subscribeCamera",
+                         "subscribeCameraServiceRGB",
                           name_,
                           camera_source_front_,
                           resolution_front_,
@@ -136,6 +138,7 @@ void CameraService::reset( ros::NodeHandle& nh )
 bool CameraService::callback( pepper_clf_msgs::DepthAndColorImage::Request &req, pepper_clf_msgs::DepthAndColorImage::Response &resp )
 {
 
+    ROS_INFO(">>> [Service] camera depth+rgb called");
     // std::cout << "name: " << name_ << " camera_source: " << camera_source_depth_ << " resolution: " << resolution_depth_ << " colorspace: " << colorspace_depth_ << " frequency: " << frequency_depth_;
     qi::AnyValue image_anyvalue = p_video_depth_.call<qi::AnyValue>("getImageRemote", handle_depth_);
     tools::NaoqiImage image;
@@ -155,7 +158,6 @@ bool CameraService::callback( pepper_clf_msgs::DepthAndColorImage::Request &req,
 
     resp.depth.header.stamp = ros::Time::now();
     p_video_depth_.call<qi::AnyValue>("releaseImage", handle_depth_);
-
     image_anyvalue = p_video_color_.call<qi::AnyValue>("getImageRemote", handle_front_);
 
     try{
@@ -170,7 +172,6 @@ bool CameraService::callback( pepper_clf_msgs::DepthAndColorImage::Request &req,
     cv::Mat cv_img_front(image.height, image.width, cv_mat_type_front_, image.buffer);
     resp.color = *cv_bridge::CvImage(std_msgs::Header(), msg_colorspace_front_, cv_img_front).toImageMsg();
     resp.color.header.frame_id = msg_frameid_front_;
-
     resp.color.header.stamp = ros::Time::now();
     p_video_color_.call<qi::AnyValue>("releaseImage", handle_front_);
 
