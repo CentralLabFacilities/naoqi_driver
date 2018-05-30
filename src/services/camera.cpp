@@ -102,13 +102,13 @@ CameraService::~CameraService() {
     {
       p_video_depth_.call<qi::AnyValue>("unsubscribe", handle_depth_);
       handle_depth_.clear();
-      ROS_INFO(">>> [Service] Camera Depth Unsubscribe");
+      ROS_INFO(">>> [Service] camera depth unsubscribe");
     }
     if (!handle_front_.empty())
     {
       p_video_color_.call<qi::AnyValue>("unsubscribe", handle_front_);
       handle_front_.clear();
-      ROS_INFO(">>> [Service] Camera RGB Unsubscribe");
+      ROS_INFO(">>> [Service] camera color unsubscribe");
     }
 }
 
@@ -118,14 +118,14 @@ void CameraService::reset( ros::NodeHandle& nh ) {
   {
     p_video_depth_.call<qi::AnyValue>("unsubscribe", handle_depth_);
     handle_depth_.clear();
-    std::cout << "reset service handle " << handle_depth_ << std::endl;
+    std::cout << "[Service] reset " << handle_depth_ << std::endl;
   }
 
   if (!handle_front_.empty())
   {
     p_video_color_.call<qi::AnyValue>("unsubscribe", handle_front_);
     handle_front_.clear();
-    std::cout << "reset service handle " << handle_front_ << std::endl;
+    std::cout << "[Service] reset " << handle_front_ << std::endl;
   }
 
   handle_depth_ = p_video_depth_.call<std::string>(
@@ -148,7 +148,7 @@ void CameraService::reset( ros::NodeHandle& nh ) {
 
   service_ = nh.advertiseService(topic_, &CameraService::callback, this);
 
-  std::cout << "rgb+depth service init done" << std::endl;
+  std::cout << "[Service] rgb+depth init done" << std::endl;
 
 }
 
@@ -162,7 +162,7 @@ bool CameraService::callback( pepper_clf_msgs::DepthAndColorImage::Request &req,
     try{
         image = tools::fromAnyValueToNaoqiImage(image_anyvalue);
     } catch (std::runtime_error& e) {
-      ROS_ERROR(">>> Cannot retrieve depth image: %s", e.what());
+      ROS_ERROR("Cannot retrieve depth image: %s", e.what());
       resp.success = false;
       return false;
     }
@@ -178,7 +178,7 @@ bool CameraService::callback( pepper_clf_msgs::DepthAndColorImage::Request &req,
     try{
         image = tools::fromAnyValueToNaoqiImage(image_anyvalue);
     } catch(std::runtime_error& e) {
-      ROS_ERROR(">>> Cannot retrieve color image: %s", e.what());
+      ROS_ERROR("Cannot retrieve color image: %s", e.what());
       resp.success = false;
       return false;
     }
