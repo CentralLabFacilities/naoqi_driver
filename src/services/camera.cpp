@@ -114,7 +114,22 @@ CameraService::~CameraService() {
 
 void CameraService::reset( ros::NodeHandle& nh )
 {
+
   service_ = nh.advertiseService(topic_, &CameraService::callback, this);
+
+  if (!handle_depth_.empty())
+  {
+    p_video_depth_.call<qi::AnyValue>("unsubscribe", handle_depth_);
+    handle_depth_.clear();
+    ROS_INFO(">>> [Service] resetting depth service");
+  }
+
+  if (!handle_front_.empty())
+  {
+    p_video_color_.call<qi::AnyValue>("unsubscribe", handle_front_);
+    handle_front_.clear();
+    ROS_INFO(">>> [Service] resetting color service");
+  }
 
   handle_depth_ = p_video_depth_.call<std::string>(
                          "subscribeCamera",
@@ -133,22 +148,18 @@ void CameraService::reset( ros::NodeHandle& nh )
                           colorspace_front_,
                           frequency_front_
                           );
-
-  ROS_INFO("[Service] resetting camera");
 }
 
 bool CameraService::callback( pepper_clf_msgs::DepthAndColorImage::Request &req, pepper_clf_msgs::DepthAndColorImage::Response &resp )
 {
 
     ROS_INFO(">>> [Service] camera depth+rgb called");
-    // std::cout << "name: " << name_ << " camera_source: " << camera_source_depth_ << " resolution: " << resolution_depth_ << " colorspace: " << colorspace_depth_ << " frequency: " << frequency_depth_;
     qi::AnyValue image_anyvalue = p_video_depth_.call<qi::AnyValue>("getImageRemote", handle_depth_);
     tools::NaoqiImage image;
 
     try{
         image = tools::fromAnyValueToNaoqiImage(image_anyvalue);
     } catch (std::runtime_error& e) {
-      // std::cout << "Cannot retrieve depth image " << e.what() << std::endl;
       ROS_ERROR(">>> Cannot retrieve depth image: %s", e.what());
       resp.success = false;
       return false;
@@ -165,7 +176,6 @@ bool CameraService::callback( pepper_clf_msgs::DepthAndColorImage::Request &req,
     try{
         image = tools::fromAnyValueToNaoqiImage(image_anyvalue);
     } catch(std::runtime_error& e) {
-      // std::cout << "Cannot retrieve front image" << std::endl;
       ROS_ERROR(">>> Cannot retrieve color image: %s", e.what());
       resp.success = false;
       return false;
