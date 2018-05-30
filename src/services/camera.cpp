@@ -97,7 +97,7 @@ CameraService::CameraService( const std::string& name, const std::string& topic,
     }
 }
 
-void CameraService::~CameraService() {
+CameraService::~CameraService() {
     if (!handle_depth_.empty())
     {
       p_video_.call<qi::AnyValue>("unsubscribe", handle_depth_);
