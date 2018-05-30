@@ -112,23 +112,20 @@ CameraService::~CameraService() {
     }
 }
 
-void CameraService::reset( ros::NodeHandle& nh )
-{
-
-  service_ = nh.advertiseService(topic_, &CameraService::callback, this);
+void CameraService::reset( ros::NodeHandle& nh ) {
 
   if (!handle_depth_.empty())
   {
     p_video_depth_.call<qi::AnyValue>("unsubscribe", handle_depth_);
     handle_depth_.clear();
-    ROS_INFO(">>> [Service] resetting depth service");
+    std::cout << "reset service handle " << handle_depth_ << std::endl;
   }
 
   if (!handle_front_.empty())
   {
     p_video_color_.call<qi::AnyValue>("unsubscribe", handle_front_);
     handle_front_.clear();
-    ROS_INFO(">>> [Service] resetting color service");
+    std::cout << "reset service handle " << handle_front_ << std::endl;
   }
 
   handle_depth_ = p_video_depth_.call<std::string>(
@@ -148,6 +145,11 @@ void CameraService::reset( ros::NodeHandle& nh )
                           colorspace_front_,
                           frequency_front_
                           );
+
+  service_ = nh.advertiseService(topic_, &CameraService::callback, this);
+
+  std::cout << "rgb+depth service init done" << std::endl;
+
 }
 
 bool CameraService::callback( pepper_clf_msgs::DepthAndColorImage::Request &req, pepper_clf_msgs::DepthAndColorImage::Response &resp )
