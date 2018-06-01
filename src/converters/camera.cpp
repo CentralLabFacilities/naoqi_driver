@@ -134,7 +134,8 @@ CameraConverter::CameraConverter( const std::string& name, const float& frequenc
     camera_source_(camera_source),
     resolution_(resolution),
     // change in case of depth camera
-    colorspace_( (camera_source_!=AL::kDepthCamera)?AL::kRGBColorSpace:AL::kRawDepthColorSpace ),
+    // colorspace_( (camera_source_!=AL::kDepthCamera)?AL::kRGBColorSpace:AL::kRawDepthColorSpace ),
+    colorspace_( (camera_source_!=AL::kDepthCamera)?AL::kYUV422ColorSpace:AL::kRawDepthColorSpace ),
     msg_colorspace_( (camera_source_!=AL::kDepthCamera)?"rgb8":"16UC1" ),
     cv_mat_type_( (camera_source_!=AL::kDepthCamera)?CV_8UC3:CV_16U ),
     camera_info_( camera_info_definitions::getCameraInfo(camera_source, resolution) )
@@ -236,12 +237,24 @@ void CameraConverter::callAll( const std::vector<message_actions::MessageAction>
 
   // Create a cv::Mat of the right dimensions
   // cv::Mat cv_img(image->getHeight(), image->getWidth(), cv_mat_type_, image->getData());
-  cv::Mat cv_img(image.height, image.width, cv_mat_type_, image.buffer);
-  msg_ = cv_bridge::CvImage(std_msgs::Header(), msg_colorspace_, cv_img).toImageMsg();
+
+  // RGB case
+  // cv::Mat cv_img(image.height, image.width, cv_mat_type_, image.buffer);
+  // msg_ = cv_bridge::CvImage(std_msgs::Header(), msg_colorspace_, cv_img).toImageMsg();
+
+  // YUV442 case
+  if (colorspace_ == AL::kYUV422ColorSpace) {
+    cv::Mat cv_YUV(image.height, image.width, CV_8UC2, image.buffer);
+    cvtColor(cv_YUV, cv_img_, CV_YUV2RGB_YUYV);
+  }
+  else {
+    cv_img_= cv::Mat(image.height, image.width, cv_mat_type_, image.buffer);
+  }
+
+  msg_ = cv_bridge::CvImage(std_msgs::Header(), msg_colorspace_, cv_img_).toImageMsg();
   msg_->header.frame_id = msg_frameid_;
   msg_->header.stamp = ros::Time::now();
-  // msg_->header.stamp.sec = image.timestamp_s;
-  // msg_->header.stamp.nsec = image.timestamp_us*1000;
+
   camera_info_.header.stamp = msg_->header.stamp;
 
   for_each( const message_actions::MessageAction& action, actions )
@@ -249,8 +262,8 @@ void CameraConverter::callAll( const std::vector<message_actions::MessageAction>
     callbacks_[action]( msg_, camera_info_ );
   }
 
-  p_video_.call<qi::AnyValue>("releaseImage", handle_);
   // delete im;
+  p_video_.call<qi::AnyValue>("releaseImage", handle_);
 }
 
 } // publisher
