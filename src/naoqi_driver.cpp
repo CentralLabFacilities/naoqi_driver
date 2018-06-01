@@ -917,7 +917,9 @@ void Driver::registerDefaultServices()
   size_t camera_front_resolution      = boot_config_.get( "converters.front_camera.resolution", 1); // VGA
   size_t camera_front_fps             = boot_config_.get( "converters.front_camera.fps", 10);
 
-  registerService( boost::make_shared<service::CameraService>("camera image service", "/naoqi_driver/get_images", sessionPtr_, AL::kDepthCamera, camera_depth_resolution, camera_depth_fps, AL::kTopCamera, camera_front_resolution, camera_front_fps) );
+  // Basically this service works, however, sometimes the service dies for yet unknown reasons thus we use a workaround.
+  // TODO: Investigate!
+  // registerService( boost::make_shared<service::CameraService>("camera image service", "/naoqi_driver/get_images", sessionPtr_, AL::kDepthCamera, camera_depth_resolution, camera_depth_fps, AL::kTopCamera, camera_front_resolution, camera_front_fps) );
 }
 
 std::vector<std::string> Driver::getAvailableConverters()
