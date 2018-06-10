@@ -163,7 +163,7 @@ bool CameraService::callback( pepper_clf_msgs::DepthAndColorImage::Request &req,
     tools::NaoqiImage image_d;
 
     try{
-        image = tools::fromAnyValueToNaoqiImage(image_anyvalue_d);
+        image_d = tools::fromAnyValueToNaoqiImage(image_anyvalue_d);
     } catch (std::runtime_error& e) {
       ROS_ERROR("[Service] cannot retrieve depth image: %s", e.what());
       resp.success = false;
@@ -181,7 +181,7 @@ bool CameraService::callback( pepper_clf_msgs::DepthAndColorImage::Request &req,
     tools::NaoqiImage image_c;
 
     try{
-        image = tools::fromAnyValueToNaoqiImage(image_anyvalue_c);
+        image_c = tools::fromAnyValueToNaoqiImage(image_anyvalue_c);
     } catch(std::runtime_error& e) {
       ROS_ERROR("[Service] cannot retrieve color image: %s", e.what());
       resp.success = false;
