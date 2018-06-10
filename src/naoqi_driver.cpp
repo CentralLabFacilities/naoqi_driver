@@ -913,13 +913,12 @@ void Driver::registerDefaultServices()
 {
   registerService( boost::make_shared<service::RobotConfigService>("robot config service", "/naoqi_driver/get_robot_config", sessionPtr_) );
 
-  size_t camera_depth_resolution      = boot_config_.get( "converters.depth_camera.resolution", 1); // QVGA
-  size_t camera_depth_fps             = boot_config_.get( "converters.depth_camera.fps", 10);
-
-  size_t camera_front_resolution      = boot_config_.get( "converters.front_camera.resolution", 1); // VGA
-  size_t camera_front_fps             = boot_config_.get( "converters.front_camera.fps", 10);
-
-  registerService(boost::make_shared<service::CameraService>("camera image service", "/naoqi_driver/get_images", sessionPtr_, AL::kDepthCamera, camera_depth_resolution, camera_depth_fps, AL::kTopCamera, camera_front_resolution, camera_front_fps));
+  // Only god knows why this does work 999 out of 1000 times, maybe it is Satan though ...
+  // size_t camera_depth_resolution      = boot_config_.get( "converters.depth_camera.resolution", 1); // QVGA
+  // size_t camera_depth_fps             = boot_config_.get( "converters.depth_camera.fps", 10);
+  // size_t camera_front_resolution      = boot_config_.get( "converters.front_camera.resolution", 1); // VGA
+  // size_t camera_front_fps             = boot_config_.get( "converters.front_camera.fps", 10);
+  // registerService(boost::make_shared<service::CameraService>("camera image service", "/naoqi_driver/get_images", sessionPtr_, AL::kDepthCamera, camera_depth_resolution, camera_depth_fps, AL::kTopCamera, camera_front_resolution, camera_front_fps));
 }
 
 std::vector<std::string> Driver::getAvailableConverters()
