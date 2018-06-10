@@ -458,7 +458,7 @@ void Driver::registerRecorder(const std::string& conv_name, recorder::Recorder& 
   // Concept classes don't have any default constructors needed by operator[]
   // Cannot use this operator here. So we use insert
   rec.reset(recorder_, frequency);
-  std::cout << "Not inserting a recorder for: " << conv.name() << std::endl;
+  std::cout << "Not inserting a recorder for: " << conv_name << std::endl;
   // rec_map_.insert( std::map<std::string, recorder::Recorder>::value_type(conv_name, rec) );
 }
 
@@ -648,7 +648,7 @@ void Driver::registerDefaultConverter()
   {
     boost::shared_ptr<converter::DiagnosticsConverter> dc = boost::make_shared<converter::DiagnosticsConverter>( "diag", diag_frequency, sessionPtr_);
     boost::shared_ptr<publisher::BasicPublisher<diagnostic_msgs::DiagnosticArray> > dp = boost::make_shared<publisher::BasicPublisher<diagnostic_msgs::DiagnosticArray> >( "/diagnostics" );
-    // boost::shared_ptr<recorder::DiagnosticsRecorder>   dr = boost::make_shared<recorder::DiagnosticsRecorder>( "/diagnostics" );
+    boost::shared_ptr<recorder::DiagnosticsRecorder>   dr = boost::make_shared<recorder::DiagnosticsRecorder>( "/diagnostics" );
     dc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<diagnostic_msgs::DiagnosticArray>::publish, dp, _1) );
     // dc->registerCallback( message_actions::RECORD, boost::bind(&recorder::DiagnosticsRecorder::write, dr, _1) );
     // dc->registerCallback( message_actions::LOG, boost::bind(&recorder::DiagnosticsRecorder::bufferize, dr, _1) );
@@ -659,7 +659,7 @@ void Driver::registerDefaultConverter()
   if ( imu_torso_enabled )
   {
     boost::shared_ptr<publisher::BasicPublisher<sensor_msgs::Imu> > imutp = boost::make_shared<publisher::BasicPublisher<sensor_msgs::Imu> >( "imu/torso" );
-    // boost::shared_ptr<recorder::BasicRecorder<sensor_msgs::Imu> > imutr = boost::make_shared<recorder::BasicRecorder<sensor_msgs::Imu> >( "imu/torso" );
+    boost::shared_ptr<recorder::BasicRecorder<sensor_msgs::Imu> > imutr = boost::make_shared<recorder::BasicRecorder<sensor_msgs::Imu> >( "imu/torso" );
     boost::shared_ptr<converter::ImuConverter> imutc = boost::make_shared<converter::ImuConverter>( "imu_torso", converter::IMU::TORSO, imu_torso_frequency, sessionPtr_);
     imutc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<sensor_msgs::Imu>::publish, imutp, _1) );
     // imutc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<sensor_msgs::Imu>::write, imutr, _1) );
