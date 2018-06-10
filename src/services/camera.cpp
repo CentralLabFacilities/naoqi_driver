@@ -156,40 +156,47 @@ bool CameraService::callback( pepper_clf_msgs::DepthAndColorImage::Request &req,
 {
 
     ROS_INFO(">>> [Service] camera depth+rgb called");
-    qi::AnyValue image_anyvalue = p_video_depth_.call<qi::AnyValue>("getImageRemote", handle_depth_);
-    tools::NaoqiImage image;
+
+    // DEPTH
+
+    qi::AnyValue image_anyvalue_d = p_video_depth_.call<qi::AnyValue>("getImageRemote", handle_depth_);
+    tools::NaoqiImage image_d;
 
     try{
-        image = tools::fromAnyValueToNaoqiImage(image_anyvalue);
+        image = tools::fromAnyValueToNaoqiImage(image_anyvalue_d);
     } catch (std::runtime_error& e) {
-      ROS_ERROR("Cannot retrieve depth image: %s", e.what());
+      ROS_ERROR("[Service] cannot retrieve depth image: %s", e.what());
       resp.success = false;
       return false;
     }
 
-    cv::Mat cv_img_depth(image.height, image.width, cv_mat_type_depth_, image.buffer);
+    cv::Mat cv_img_depth(image_d.height, image_d.width, cv_mat_type_depth_, image_d.buffer);
     resp.depth = *cv_bridge::CvImage(std_msgs::Header(), msg_colorspace_depth_, cv_img_depth).toImageMsg();
     resp.depth.header.frame_id = msg_frameid_depth_;
-
     resp.depth.header.stamp = ros::Time::now();
-    // delete im; Not really neccessary
-    // p_video_depth_.call<qi::AnyValue>("releaseImage", handle_depth_);
-    image_anyvalue = p_video_color_.call<qi::AnyValue>("getImageRemote", handle_front_);
+
+    // COLOR
+
+    qi::AnyValue image_anyvalue_c = p_video_color_.call<qi::AnyValue>("getImageRemote", handle_front_);
+    tools::NaoqiImage image_c;
 
     try{
-        image = tools::fromAnyValueToNaoqiImage(image_anyvalue);
+        image = tools::fromAnyValueToNaoqiImage(image_anyvalue_c);
     } catch(std::runtime_error& e) {
-      ROS_ERROR("Cannot retrieve color image: %s", e.what());
+      ROS_ERROR("[Service] cannot retrieve color image: %s", e.what());
       resp.success = false;
       return false;
     }
 
-    cv::Mat cv_img_front(image.height, image.width, cv_mat_type_front_, image.buffer);
+    cv::Mat cv_img_front(image_c.height, image_c.width, cv_mat_type_front_, image_c.buffer);
     resp.color = *cv_bridge::CvImage(std_msgs::Header(), msg_colorspace_front_, cv_img_front).toImageMsg();
     resp.color.header.frame_id = msg_frameid_front_;
     resp.color.header.stamp = ros::Time::now();
+
     // delete im; Not really neccessary
     // p_video_color_.call<qi::AnyValue>("releaseImage", handle_front_);
+    // delete im; Not really neccessary
+    // p_video_depth_.call<qi::AnyValue>("releaseImage", handle_depth_);
 
     resp.success = true;
     return true;
