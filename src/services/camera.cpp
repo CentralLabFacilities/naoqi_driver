@@ -33,8 +33,8 @@ namespace service
 CameraService::CameraService( const std::string& name, const std::string& topic, const qi::SessionPtr& session, const int& camera_source_depth, const int& resolution_depth, const float& frequency_depth,
                               const int& camera_source_front, const int& resolution_front, const float& frequency_front)
   : name_(name),
-  p_video_depth_( session->service("ALVideoDevice") ),
-  p_video_color_( session->service("ALVideoDevice") ),
+  p_video_depth_(session->service("ALVideoDevice")),
+  p_video_color_(session->service("ALVideoDevice")),
   camera_source_depth_(camera_source_depth),
   resolution_depth_(resolution_depth),
   colorspace_depth_( (camera_source_depth!=AL::kDepthCamera)?AL::kRGBColorSpace:AL::kRawDepthColorSpace ),
@@ -172,7 +172,8 @@ bool CameraService::callback( pepper_clf_msgs::DepthAndColorImage::Request &req,
     resp.depth.header.frame_id = msg_frameid_depth_;
 
     resp.depth.header.stamp = ros::Time::now();
-    p_video_depth_.call<qi::AnyValue>("releaseImage", handle_depth_);
+    // delete im; Not really neccessary
+    // p_video_depth_.call<qi::AnyValue>("releaseImage", handle_depth_);
     image_anyvalue = p_video_color_.call<qi::AnyValue>("getImageRemote", handle_front_);
 
     try{
@@ -187,7 +188,8 @@ bool CameraService::callback( pepper_clf_msgs::DepthAndColorImage::Request &req,
     resp.color = *cv_bridge::CvImage(std_msgs::Header(), msg_colorspace_front_, cv_img_front).toImageMsg();
     resp.color.header.frame_id = msg_frameid_front_;
     resp.color.header.stamp = ros::Time::now();
-    p_video_color_.call<qi::AnyValue>("releaseImage", handle_front_);
+    // delete im; Not really neccessary
+    // p_video_color_.call<qi::AnyValue>("releaseImage", handle_front_);
 
     resp.success = true;
     return true;

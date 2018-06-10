@@ -262,8 +262,8 @@ void CameraConverter::callAll( const std::vector<message_actions::MessageAction>
     callbacks_[action]( msg_, camera_info_ );
   }
 
-  // delete im;
-  p_video_.call<qi::AnyValue>("releaseImage", handle_);
+  // delete im; Not really neccessary
+  // p_video_.call<qi::AnyValue>("releaseImage", handle_);
 }
 
 } // publisher
