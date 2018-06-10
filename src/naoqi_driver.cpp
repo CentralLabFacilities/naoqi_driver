@@ -453,40 +453,42 @@ void Driver::registerPublisher( const std::string& conv_name, publisher::Publish
   pub_map_.insert( std::map<std::string, publisher::Publisher>::value_type(conv_name, pub) );
 }
 
-void Driver::registerRecorder( const std::string& conv_name, recorder::Recorder& rec, float frequency)
+void Driver::registerRecorder(const std::string& conv_name, recorder::Recorder& rec, float frequency)
 {
   // Concept classes don't have any default constructors needed by operator[]
   // Cannot use this operator here. So we use insert
   rec.reset(recorder_, frequency);
-  rec_map_.insert( std::map<std::string, recorder::Recorder>::value_type(conv_name, rec) );
+  std::cout << "Not inserting a recorder for: " << conv.name() << std::endl;
+  // rec_map_.insert( std::map<std::string, recorder::Recorder>::value_type(conv_name, rec) );
 }
 
 void Driver::insertEventConverter(const std::string& key, event::Event event)
 {
   //event.reset(*nhPtr_, recorder_);
   event.resetRecorder(recorder_);
-  event_map_.insert( std::map<std::string, event::Event>::value_type(key, event) );
+  event_map_.insert(std::map<std::string, event::Event>::value_type(key, event) );
 }
 
-void Driver::registerConverter( converter::Converter conv, publisher::Publisher pub, recorder::Recorder rec )
+void Driver::registerConverter(converter::Converter conv, publisher::Publisher pub, recorder::Recorder rec)
 {
-  registerConverter( conv );
-  registerPublisher( conv.name(), pub );
+  registerConverter(conv );
+  registerPublisher(conv.name(), pub);
   // We dont need to record
-  // std::cout << "Not registering a recorder for: " << conv.name() << std::endl;
+  std::cout << "Not registering a recorder (converter) for: " << conv.name() << std::endl;
   // registerRecorder( conv.name(), rec, conv.frequency() );
 }
 
-void Driver::registerPublisher( converter::Converter conv, publisher::Publisher pub )
+void Driver::registerPublisher(converter::Converter conv, publisher::Publisher pub)
 {
-  registerConverter( conv );
+  registerConverter(conv);
   registerPublisher(conv.name(), pub);
 }
 
-void Driver::registerRecorder( converter::Converter conv, recorder::Recorder rec )
+void Driver::registerRecorder(converter::Converter conv, recorder::Recorder rec)
 {
-  registerConverter( conv );
-  registerRecorder(  conv.name(), rec, conv.frequency());
+  registerConverter(conv);
+  std::cout << "Not registering a recorder for: " << conv.name() << std::endl;
+  // registerRecorder(conv.name(), rec, conv.frequency());
 }
 
 bool Driver::registerMemoryConverter( const std::string& key, float frequency, const dataType::DataType& type ) {
@@ -623,7 +625,7 @@ void Driver::registerDefaultConverter()
   if ( info_enabled )
   {
     boost::shared_ptr<publisher::InfoPublisher> inp = boost::make_shared<publisher::InfoPublisher>( "info" , robot_);
-    // boost::shared_ptr<recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped> > inr = boost::make_shared<recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped> >( "info" );
+    boost::shared_ptr<recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped> > inr = boost::make_shared<recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped> >( "info" );
     boost::shared_ptr<converter::InfoConverter> inc = boost::make_shared<converter::InfoConverter>( "info", 0, sessionPtr_ );
     inc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::InfoPublisher::publish, inp, _1) );
     // inc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<naoqi_bridge_msgs::StringStamped>::write, inr, _1) );
@@ -671,7 +673,7 @@ void Driver::registerDefaultConverter()
     if ( imu_base_enabled )
     {
       boost::shared_ptr<publisher::BasicPublisher<sensor_msgs::Imu> > imubp = boost::make_shared<publisher::BasicPublisher<sensor_msgs::Imu> >( "imu/base" );
-      // boost::shared_ptr<recorder::BasicRecorder<sensor_msgs::Imu> > imubr = boost::make_shared<recorder::BasicRecorder<sensor_msgs::Imu> >( "imu/base" );
+      boost::shared_ptr<recorder::BasicRecorder<sensor_msgs::Imu> > imubr = boost::make_shared<recorder::BasicRecorder<sensor_msgs::Imu> >( "imu/base" );
       boost::shared_ptr<converter::ImuConverter> imubc = boost::make_shared<converter::ImuConverter>( "imu_base", converter::IMU::BASE, imu_base_frequency, sessionPtr_);
       imubc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<sensor_msgs::Imu>::publish, imubp, _1) );
       // imubc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<sensor_msgs::Imu>::write, imubr, _1) );
@@ -684,7 +686,7 @@ void Driver::registerDefaultConverter()
   if ( camera_front_enabled )
   {
     boost::shared_ptr<publisher::CameraPublisher> fcp = boost::make_shared<publisher::CameraPublisher>( "camera/front/image_raw", AL::kTopCamera );
-    // boost::shared_ptr<recorder::CameraRecorder> fcr = boost::make_shared<recorder::CameraRecorder>( "camera/front", camera_front_recorder_fps );
+    boost::shared_ptr<recorder::CameraRecorder> fcr = boost::make_shared<recorder::CameraRecorder>( "camera/front", camera_front_recorder_fps );
     boost::shared_ptr<converter::CameraConverter> fcc = boost::make_shared<converter::CameraConverter>( "front_camera", camera_front_fps, sessionPtr_, AL::kTopCamera, camera_front_resolution );
     fcc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, fcp, _1, _2) );
     // fcc->registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, fcr, _1, _2) );
@@ -696,7 +698,7 @@ void Driver::registerDefaultConverter()
   if ( camera_bottom_enabled )
   {
     boost::shared_ptr<publisher::CameraPublisher> bcp = boost::make_shared<publisher::CameraPublisher>( "camera/bottom/image_raw", AL::kBottomCamera );
-    // boost::shared_ptr<recorder::CameraRecorder> bcr = boost::make_shared<recorder::CameraRecorder>( "camera/bottom", camera_bottom_recorder_fps );
+    boost::shared_ptr<recorder::CameraRecorder> bcr = boost::make_shared<recorder::CameraRecorder>( "camera/bottom", camera_bottom_recorder_fps );
     boost::shared_ptr<converter::CameraConverter> bcc = boost::make_shared<converter::CameraConverter>( "bottom_camera", camera_bottom_fps, sessionPtr_, AL::kBottomCamera, camera_bottom_resolution );
     bcc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, bcp, _1, _2) );
     // bcc->registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, bcr, _1, _2) );
@@ -711,7 +713,7 @@ void Driver::registerDefaultConverter()
     if ( camera_depth_enabled )
     {
       boost::shared_ptr<publisher::CameraPublisher> dcp = boost::make_shared<publisher::CameraPublisher>( "camera/depth/image_raw", AL::kDepthCamera );
-      // boost::shared_ptr<recorder::CameraRecorder> dcr = boost::make_shared<recorder::CameraRecorder>( "camera/depth", camera_depth_recorder_fps );
+      boost::shared_ptr<recorder::CameraRecorder> dcr = boost::make_shared<recorder::CameraRecorder>( "camera/depth", camera_depth_recorder_fps );
       boost::shared_ptr<converter::CameraConverter> dcc = boost::make_shared<converter::CameraConverter>( "depth_camera", camera_depth_fps, sessionPtr_, AL::kDepthCamera, camera_depth_resolution );
       dcc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, dcp, _1, _2) );
       // dcc->registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, dcr, _1, _2) );
@@ -723,7 +725,7 @@ void Driver::registerDefaultConverter()
     if ( camera_ir_enabled )
     {
       boost::shared_ptr<publisher::CameraPublisher> icp = boost::make_shared<publisher::CameraPublisher>( "camera/ir/image_raw", AL::kInfraredCamera );
-      // boost::shared_ptr<recorder::CameraRecorder> icr = boost::make_shared<recorder::CameraRecorder>( "camera/ir", camera_ir_recorder_fps );
+      boost::shared_ptr<recorder::CameraRecorder> icr = boost::make_shared<recorder::CameraRecorder>( "camera/ir", camera_ir_recorder_fps );
       boost::shared_ptr<converter::CameraConverter> icc = boost::make_shared<converter::CameraConverter>( "infrared_camera", camera_ir_fps, sessionPtr_, AL::kInfraredCamera, camera_ir_resolution);
       icc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::CameraPublisher::publish, icp, _1, _2) );
       // icc->registerCallback( message_actions::RECORD, boost::bind(&recorder::CameraRecorder::write, icr, _1, _2) );
@@ -736,7 +738,7 @@ void Driver::registerDefaultConverter()
   if ( joint_states_enabled )
   {
     boost::shared_ptr<publisher::JointStatePublisher> jsp = boost::make_shared<publisher::JointStatePublisher>( "/joint_states" );
-    // boost::shared_ptr<recorder::JointStateRecorder> jsr = boost::make_shared<recorder::JointStateRecorder>( "/joint_states" );
+    boost::shared_ptr<recorder::JointStateRecorder> jsr = boost::make_shared<recorder::JointStateRecorder>( "/joint_states" );
     boost::shared_ptr<converter::JointStateConverter> jsc = boost::make_shared<converter::JointStateConverter>( "joint_states", joint_states_frequency, tf2_buffer_, sessionPtr_ );
     jsc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::JointStatePublisher::publish, jsp, _1, _2) );
     // jsc->registerCallback( message_actions::RECORD, boost::bind(&recorder::JointStateRecorder::write, jsr, _1, _2) );
@@ -751,7 +753,7 @@ void Driver::registerDefaultConverter()
     if ( laser_enabled )
     {
       boost::shared_ptr<publisher::BasicPublisher<sensor_msgs::LaserScan> > lp = boost::make_shared<publisher::BasicPublisher<sensor_msgs::LaserScan> >( "laser" );
-      // boost::shared_ptr<recorder::BasicRecorder<sensor_msgs::LaserScan> > lr = boost::make_shared<recorder::BasicRecorder<sensor_msgs::LaserScan> >( "laser" );
+      boost::shared_ptr<recorder::BasicRecorder<sensor_msgs::LaserScan> > lr = boost::make_shared<recorder::BasicRecorder<sensor_msgs::LaserScan> >( "laser" );
       boost::shared_ptr<converter::LaserConverter> lc = boost::make_shared<converter::LaserConverter>( "laser", laser_frequency, sessionPtr_ );
       lc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<sensor_msgs::LaserScan>::publish, lp, _1) );
       // lc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<sensor_msgs::LaserScan>::write, lr, _1) );
@@ -775,7 +777,7 @@ void Driver::registerDefaultConverter()
       sonar_topics.push_back("sonar/right");
     }
     boost::shared_ptr<publisher::SonarPublisher> usp = boost::make_shared<publisher::SonarPublisher>( sonar_topics );
-    // boost::shared_ptr<recorder::SonarRecorder> usr = boost::make_shared<recorder::SonarRecorder>( sonar_topics );
+    boost::shared_ptr<recorder::SonarRecorder> usr = boost::make_shared<recorder::SonarRecorder>( sonar_topics );
     boost::shared_ptr<converter::SonarConverter> usc = boost::make_shared<converter::SonarConverter>( "sonar", sonar_frequency, sessionPtr_ );
     usc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::SonarPublisher::publish, usp, _1) );
     // usc->registerCallback( message_actions::RECORD, boost::bind(&recorder::SonarRecorder::write, usr, _1) );
@@ -858,7 +860,7 @@ void Driver::registerDefaultConverter()
   if ( odom_enabled )
   {
     boost::shared_ptr<publisher::BasicPublisher<nav_msgs::Odometry> > lp = boost::make_shared<publisher::BasicPublisher<nav_msgs::Odometry> >( "odom" );
-    // boost::shared_ptr<recorder::BasicRecorder<nav_msgs::Odometry> > lr = boost::make_shared<recorder::BasicRecorder<nav_msgs::Odometry> >( "odom" );
+    boost::shared_ptr<recorder::BasicRecorder<nav_msgs::Odometry> > lr = boost::make_shared<recorder::BasicRecorder<nav_msgs::Odometry> >( "odom" );
     boost::shared_ptr<converter::OdomConverter> lc = boost::make_shared<converter::OdomConverter>( "odom", odom_frequency, sessionPtr_ );
     lc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<nav_msgs::Odometry>::publish, lp, _1) );
     // lc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<nav_msgs::Odometry>::write, lr, _1) );
@@ -1254,7 +1256,7 @@ void Driver::addMemoryConverters(std::string filepath){
 
   // Create converter, publisher and recorder
   boost::shared_ptr<publisher::BasicPublisher<naoqi_bridge_msgs::MemoryList> > mlp = boost::make_shared<publisher::BasicPublisher<naoqi_bridge_msgs::MemoryList> >( topic );
-  // boost::shared_ptr<recorder::BasicRecorder<naoqi_bridge_msgs::MemoryList> > mlr = boost::make_shared<recorder::BasicRecorder<naoqi_bridge_msgs::MemoryList> >( topic );
+  boost::shared_ptr<recorder::BasicRecorder<naoqi_bridge_msgs::MemoryList> > mlr = boost::make_shared<recorder::BasicRecorder<naoqi_bridge_msgs::MemoryList> >( topic );
   boost::shared_ptr<converter::MemoryListConverter> mlc = boost::make_shared<converter::MemoryListConverter>(list, topic, frequency, sessionPtr_ );
   mlc->registerCallback( message_actions::PUBLISH, boost::bind(&publisher::BasicPublisher<naoqi_bridge_msgs::MemoryList>::publish, mlp, _1) );
   // mlc->registerCallback( message_actions::RECORD, boost::bind(&recorder::BasicRecorder<naoqi_bridge_msgs::MemoryList>::write, mlr, _1) );
